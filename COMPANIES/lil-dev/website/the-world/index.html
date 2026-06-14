@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#3B64B6">
+  <title>The World of Lil Dev — A Neighborhood Full of Stories | Lil Dev World</title>
+  <meta name="description" content="Step inside Lil Dev's neighborhood — a world full of wonder, hidden secrets, and adventures waiting around every corner. Explore the growing universe.">
+  <link rel="canonical" href="https://lildev.world/the-world/">
+  <meta property="og:title" content="The World of Lil Dev — A Neighborhood Full of Stories">
+  <meta property="og:description" content="Enter a world built for discovery. Every corner has a story. Every place has a memory. This is where the adventures happen.">
+  <meta property="og:url" content="https://lildev.world/the-world/">
+  <meta property="og:image" content="https://lildev.world/assets/images/og-cover.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://lildev.world/assets/images/og-cover.jpg">
+  <link rel="icon" href="/assets/images/lildev-logo-cropped.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Place","@id":"https://lildev.world/the-world/#place","name":"The World of Lil Dev","description":"The fictional neighborhood universe where Lil Dev and Angel live, explore, and discover new adventures every day.","url":"https://lildev.world/the-world/","containedInPlace":{"@type":"City","name":"Lil Dev's Neighborhood"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Lil Dev World","item":"https://lildev.world/"},{"@type":"ListItem","position":2,"name":"The World","item":"https://lildev.world/the-world/"}]}</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --blue:#3B64B6;--blue-lt:#5B8AD6;--blue-dk:#2A4A8A;--yellow:#FFC400;--yellow-lt:#FFD84D;--dark:#1A2340;--white:#FFFFFF;--green:#34C759; }
+    html { scroll-behavior: smooth; }
+    body { font-family:'Inter',sans-serif; color:var(--dark); background:var(--white); overflow-x:hidden; }
+    .nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;height:64px;overflow:hidden;padding:0 2rem;background:rgba(42,74,138,0.97);backdrop-filter:blur(14px);box-shadow:0 2px 24px rgba(0,0,0,0.2);}
+    .nav-brand{display:flex;align-items:center;text-decoration:none;flex-shrink:0;}.nav-logo{height:52px;width:auto;}
+    .nav-links{display:flex;gap:0.2rem;list-style:none;}.nav-links a{font-family:'Nunito',sans-serif;font-weight:700;font-size:0.85rem;color:rgba(255,255,255,0.88);text-decoration:none;padding:0.38rem 0.75rem;border-radius:999px;transition:all 0.2s;}.nav-links a:hover{background:rgba(255,196,0,0.18);color:var(--yellow);}.nav-cta{background:var(--yellow)!important;color:var(--dark)!important;font-weight:900!important;}.nav-arrow{display:none;}
+    .page-hero{min-height:55vh;display:flex;align-items:flex-end;justify-content:center;padding:7rem 2rem 4rem;text-align:center;position:relative;overflow:hidden;background:linear-gradient(to bottom,#0A1F5C 0%,#1B3F99 18%,#3B64B6 45%,#6A9ED8 70%,#87CEEB 85%,#FFE4A0 100%);}
+    .page-hero-content{position:relative;z-index:2;max-width:700px;}
+    .page-tag{display:inline-block;background:var(--yellow);color:var(--dark);font-family:'Nunito',sans-serif;font-weight:900;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.3rem 1rem;border-radius:999px;margin-bottom:1.2rem;}
+    .page-h1{font-family:'Fredoka',sans-serif;font-size:clamp(2.4rem,7vw,4.2rem);font-weight:700;color:var(--white);line-height:1.08;margin-bottom:0.8rem;text-shadow:0 4px 24px rgba(0,0,0,0.3);}
+    .page-sub{font-family:'Nunito',sans-serif;font-size:clamp(1rem,2.5vw,1.2rem);font-weight:700;color:rgba(255,255,255,0.82);}
+    .sec{padding:5rem 1.5rem;}.wrap{max-width:1100px;margin:0 auto;}
+    .sec-label{display:block;font-family:'Nunito',sans-serif;font-weight:900;font-size:0.78rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--blue);margin-bottom:0.4rem;}
+    .sec-title{font-family:'Fredoka',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;color:var(--dark);margin-bottom:0.5rem;}
+    .sec-sub{font-family:'Inter',sans-serif;font-size:1rem;color:#556;line-height:1.7;margin-bottom:3rem;max-width:560px;}
+    .places-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.4rem;}
+    .place-card{border-radius:1.5rem;overflow:hidden;position:relative;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,0.1);transition:transform 0.28s ease,box-shadow 0.28s ease;}
+    .place-card:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(0,0,0,0.18);}
+    .place-img{width:100%;height:220px;object-fit:cover;display:block;transition:transform 0.4s ease;}
+    .place-card:hover .place-img{transform:scale(1.06);}
+    .place-label{position:absolute;bottom:0;left:0;right:0;padding:1.4rem 1.2rem 1rem;background:linear-gradient(to top,rgba(0,0,0,0.78),transparent);}
+    .place-name{font-family:'Fredoka',sans-serif;font-size:1.2rem;font-weight:700;color:var(--white);margin-bottom:0.25rem;}
+    .place-desc{font-family:'Inter',sans-serif;font-size:0.8rem;color:rgba(255,255,255,0.75);}
+    .world-desc{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-bottom:5rem;}
+    .world-desc-text p{font-family:'Inter',sans-serif;font-size:1.02rem;line-height:1.78;color:#445;margin-bottom:1.2rem;}
+    .world-pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:3rem;}
+    .pillar{background:#F0F5FF;border-radius:1.2rem;padding:1.6rem 1.2rem;text-align:center;}
+    .pillar-icon{font-size:2rem;display:block;margin-bottom:0.6rem;}
+    .pillar-title{font-family:'Fredoka',sans-serif;font-size:1.05rem;font-weight:700;color:var(--dark);margin-bottom:0.3rem;}
+    .pillar-text{font-family:'Inter',sans-serif;font-size:0.82rem;color:#667;line-height:1.55;}
+    .cta-band{background:var(--yellow);padding:4rem 1.5rem;text-align:center;}
+    .cta-band h2{font-family:'Fredoka',sans-serif;font-size:clamp(1.8rem,5vw,2.8rem);font-weight:700;color:var(--dark);margin-bottom:0.5rem;}
+    .cta-band p{font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;color:rgba(34,34,34,0.7);margin-bottom:1.8rem;}
+    .cta-row{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+    .btn-primary{display:inline-block;background:var(--dark);color:var(--white);font-family:'Fredoka',sans-serif;font-size:1.1rem;font-weight:700;padding:0.75rem 1.8rem;border-radius:999px;text-decoration:none;transition:all 0.2s;}
+    .btn-primary:hover{transform:translateY(-2px);}
+    .footer{background:#06101E;color:rgba(255,255,255,0.65);padding:3rem 1.5rem;}
+    .footer-grid{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:2rem;}
+    .footer-logo{height:72px;width:auto;margin-bottom:0.8rem;}.footer-tag{font-family:'Nunito',sans-serif;font-size:0.88rem;color:rgba(255,255,255,0.5);line-height:1.65;margin-bottom:1.2rem;}
+    .footer-social{display:flex;gap:0.65rem;}.footer-social a{width:36px;height:36px;background:rgba(255,255,255,0.07);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.95rem;text-decoration:none;transition:background 0.2s,transform 0.2s;}.footer-social a:hover{background:var(--yellow);transform:translateY(-2px);}
+    .footer-col-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:0.76rem;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.35);margin-bottom:1rem;}
+    .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:0.5rem;}.footer-col a{font-family:'Inter',sans-serif;font-size:0.88rem;color:rgba(255,255,255,0.58);text-decoration:none;transition:color 0.2s;}.footer-col a:hover{color:var(--yellow);}
+    .footer-bottom{max-width:1120px;margin:2rem auto 0;padding-top:1.4rem;border-top:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;}.footer-bottom p,.footer-bottom a{font-family:'Inter',sans-serif;font-size:0.78rem;color:rgba(255,255,255,0.3);text-decoration:none;}.footer-bottom a:hover{color:rgba(255,196,0,0.7);}
+    @media(max-width:768px){.nav{flex-direction:column;height:auto;overflow:hidden;padding:0.55rem 1.2rem 0;align-items:center;justify-content:flex-start;cursor:pointer;}.nav-brand{justify-content:center;width:100%;padding-bottom:0.4rem;}.nav-logo{height:80px;}.nav-arrow{display:block;font-family:'Nunito',sans-serif;font-weight:900;font-size:0.72rem;color:var(--yellow);margin-bottom:0.4rem;letter-spacing:0.08em;transition:transform 0.3s;pointer-events:none;}.nav-arrow.open{transform:rotate(180deg);}.nav-links{display:flex!important;flex-direction:column;width:100%;max-height:0;overflow:hidden;transition:max-height 0.35s;gap:0;padding:0;border-top:1px solid transparent;}.nav-links.open{max-height:420px;border-top-color:rgba(255,255,255,0.1);padding:0.5rem 0 0.7rem;}.nav-links li{width:100%;}.nav-links a{display:block;text-align:center;padding:0.65rem 1rem;font-size:1rem;border-radius:0.6rem;}.world-desc{grid-template-columns:1fr;gap:2rem;}.world-pillars{grid-template-columns:1fr;}.footer-grid{grid-template-columns:1fr;gap:1.5rem;}.footer-bottom{justify-content:center;text-align:center;}}
+  </style>
+</head>
+<body>
+<nav class="nav" id="mainNav">
+  <a href="/" class="nav-brand" aria-label="Lil Dev World home"><img class="nav-logo" src="/assets/images/lildev-logo-cropped.png" alt="Lil Dev World logo"></a>
+  <div class="nav-arrow" id="navArrow" aria-hidden="true">▼ MENU</div>
+  <ul class="nav-links" id="navLinks" role="list">
+    <li><a href="/the-world/" aria-current="page">The World</a></li>
+    <li><a href="/meet-lil-dev/">Meet Lil Dev</a></li>
+    <li><a href="/adventures/">Adventures</a></li>
+    <li><a href="/characters/">Characters</a></li>
+    <li><a href="/learn/">Learn Lab</a></li>
+    <li><a href="/games/">Games</a></li>
+    <li><a href="/parents/">Parents</a></li>
+    <li><a href="/newsletter/" class="nav-cta">Join the World!</a></li>
+  </ul>
+</nav>
+
+<header class="page-hero">
+  <div class="page-hero-content">
+    <span class="page-tag">🗺️ Universe</span>
+    <h1 class="page-h1">The World of Lil Dev</h1>
+    <p class="page-sub">A neighborhood full of wonder. Every corner has a story.</p>
+  </div>
+</header>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="world-desc">
+      <div class="world-desc-text">
+        <span class="sec-label">🌍 The Universe</span>
+        <h2 class="sec-title">A Neighborhood Built for Discovery</h2>
+        <p>Lil Dev doesn't live in a magical kingdom or a distant galaxy. He lives in a neighborhood — a real, warm, breathing place full of ordinary things that turn extraordinary the moment you start asking questions.</p>
+        <p>Grandma's kitchen smells like something about to be discovered. The basketball court at night is quiet enough to hear the universe think. The porch at dusk is where the best conversations happen. And somewhere out there, there's a hidden world that only the most curious explorers ever find.</p>
+        <p>This is the setting. This is the world. And it's always growing.</p>
+      </div>
+      <div>
+        <div class="world-pillars">
+          <div class="pillar"><span class="pillar-icon">🏠</span><div class="pillar-title">Familiar</div><p class="pillar-text">A neighborhood that feels like home — because it IS home.</p></div>
+          <div class="pillar"><span class="pillar-icon">🔍</span><div class="pillar-title">Curious</div><p class="pillar-text">Every location hides something worth discovering.</p></div>
+          <div class="pillar"><span class="pillar-icon">🌱</span><div class="pillar-title">Growing</div><p class="pillar-text">New places, people, and secrets unlock as the world expands.</p></div>
+          <div class="pillar"><span class="pillar-icon">✨</span><div class="pillar-title">Magical</div><p class="pillar-text">Not fantasy magic — the magic of paying close attention.</p></div>
+          <div class="pillar"><span class="pillar-icon">❤️</span><div class="pillar-title">Warm</div><p class="pillar-text">Safety, belonging, and adventure all live here together.</p></div>
+          <div class="pillar"><span class="pillar-icon">🗺️</span><div class="pillar-title">Explorable</div><p class="pillar-text">The world map is always expanding. There's always more.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <span class="sec-label">📍 Key Locations</span>
+    <h2 class="sec-title">Places in the World</h2>
+    <p class="sec-sub" style="margin-bottom:2.5rem;">These are the spots where Lil Dev's stories happen. Each one has a personality, a memory, and a story waiting to be told.</p>
+
+    <div class="places-grid">
+      <div class="place-card">
+        <img class="place-img" src="/assets/images/kitchen-beam.webp" alt="Morning light streaming through grandma's kitchen — setting of the Kitchen Discovery adventure">
+        <div class="place-label">
+          <div class="place-name">Grandma's Kitchen</div>
+          <div class="place-desc">Where the best science experiments start by accident.</div>
+        </div>
+      </div>
+      <div class="place-card">
+        <img class="place-img" src="/assets/images/court-night.webp" alt="Basketball court at night under the stars — setting of the Night at the Court adventure">
+        <div class="place-label">
+          <div class="place-name">The Night Court</div>
+          <div class="place-desc">Late nights, big questions, and lessons you can't learn in school.</div>
+        </div>
+      </div>
+      <div class="place-card">
+        <img class="place-img" src="/assets/images/porch-dusk.webp" alt="The front porch at dusk — a quiet place for thinking and reflection in Lil Dev's world">
+        <div class="place-label">
+          <div class="place-name">The Porch</div>
+          <div class="place-desc">Where the best conversations happen as the sun goes down.</div>
+        </div>
+      </div>
+      <div class="place-card">
+        <img class="place-img" src="/assets/images/desk-night.webp" alt="A desk at night — Lil Dev's creative workspace for ideas and adventures">
+        <div class="place-label">
+          <div class="place-name">The Desk</div>
+          <div class="place-desc">Where ideas become plans and plans become adventures.</div>
+        </div>
+      </div>
+      <div class="place-card">
+        <img class="place-img" src="/assets/images/discovered-space.webp" alt="A hidden world discovered by Lil Dev — a mysterious space full of wonder">
+        <div class="place-label">
+          <div class="place-name">The Hidden World</div>
+          <div class="place-desc">Only the most curious explorers ever find it.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <h2>The World Is Always Growing.</h2>
+  <p>New places unlock as Lil Dev's adventures expand. Stay close — there's always more to discover.</p>
+  <div class="cta-row">
+    <a href="/adventures/" class="btn-primary">Follow the Adventures</a>
+    <a href="/meet-lil-dev/" class="btn-primary" style="background:rgba(0,0,0,0.15);color:var(--dark);">Meet Lil Dev →</a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div><img class="footer-logo" src="/assets/images/lildev-logo-cropped.png" alt="Lil Dev World logo"><p class="footer-tag">Enriching young minds through adventure and curiosity.<br>The world is always growing.</p><div class="footer-social"><a href="https://instagram.com/lildevworld" target="_blank" rel="noopener" aria-label="Instagram">📸</a><a href="https://youtube.com/@lildevworld" target="_blank" rel="noopener" aria-label="YouTube">▶️</a><a href="https://tiktok.com/@lildevworld" target="_blank" rel="noopener" aria-label="TikTok">🎵</a></div></div>
+    <div class="footer-col"><div class="footer-col-title">The World</div><ul><li><a href="/the-world/">The World</a></li><li><a href="/meet-lil-dev/">Meet Lil Dev</a></li><li><a href="/characters/">Characters</a></li><li><a href="/angel/">Angel</a></li><li><a href="/origin-story/">Origin Story</a></li></ul></div>
+    <div class="footer-col"><div class="footer-col-title">Explore</div><ul><li><a href="/adventures/">Adventures</a></li><li><a href="/learn/">Learn Lab</a></li><li><a href="/games/">Games</a></li><li><a href="/updates/">Updates</a></li></ul></div>
+    <div class="footer-col"><div class="footer-col-title">Connect</div><ul><li><a href="/parents/">For Parents</a></li><li><a href="/newsletter/">Newsletter</a></li><li><a href="https://lildev.store" target="_blank" rel="noopener">LilDev Store</a></li><li><a href="https://jdproductions.io" target="_blank" rel="noopener">JD Productions</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><p>© 2026 Lil Dev World. All rights reserved.</p><a href="https://jdproductions.io" target="_blank" rel="noopener">A JD Productions property</a></div>
+</footer>
+<script>
+  const nav=document.getElementById('mainNav'),nl=document.getElementById('navLinks'),na=document.getElementById('navArrow');
+  nav.addEventListener('click',function(e){if(window.innerWidth>768)return;if(e.target.closest('.nav-links a'))return;e.preventDefault();const o=nl.classList.toggle('open');na.classList.toggle('open',o);na.textContent=o?'▼ CLOSE':'▼ MENU';});
+</script>
+</body>
+</html>

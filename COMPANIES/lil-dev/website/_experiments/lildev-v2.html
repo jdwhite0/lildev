@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lil Dev — V2 Prototype</title>
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: radial-gradient(ellipse at 40% 45%, #04061a 0%, #020208 55%, #010105 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Georgia', serif;
+    }
+    .stage-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+    }
+    .stage {
+      position: relative;
+      width: 280px;
+      height: 280px;
+      overflow: visible;
+    }
+    .label {
+      letter-spacing: 0.30em;
+      font-size: 10px;
+      color: rgba(180, 210, 255, 0.50);
+      text-transform: uppercase;
+    }
+    .note {
+      font-size: 10px;
+      color: rgba(160, 185, 220, 0.26);
+      letter-spacing: 0.10em;
+      text-align: center;
+      line-height: 2.0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="stage-wrap">
+  <div class="stage"></div>
+  <div class="label">Lil Dev</div>
+  <div class="note">
+    V2 Prototype — Labradorite Crystal World<br>
+    jdwhite.world galaxy system
+  </div>
+</div>
+
+<script type="module">
+import * as THREE from 'https://unpkg.com/three@0.165.0/build/three.module.min.js';
+
+const stage  = document.querySelector('.stage');
+const SZ     = 280;
+const canvas = document.createElement('canvas');
+stage.appendChild(canvas);
+
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(SZ, SZ);
+canvas.style.cssText = `position:absolute;top:0;left:0;width:${SZ}px;height:${SZ}px;display:block;`;
+renderer.toneMapping         = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.10;
+
+const scene  = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(44, 1, 0.1, 100);
+camera.position.set(0, 0, 4.8);
+
+const lightDir = new THREE.Vector3(0.60, 0.48, 0.64).normalize();
+const world    = new THREE.Group();
+scene.add(world);
+
+/* ═══════════════════════════════════════════════════
+   PLANET — labradorite precious-stone crystal world
+   Architecture: dark rich base + vivid flash zones
+   (high contrast = what makes precious stone look premium)
+═══════════════════════════════════════════════════ */
+const planetVert = `
+  varying vec3 vWorldNormal;varying vec3 vViewDir;varying vec3 vLocalPos;
+  void main(){
+    vLocalPos=position;
+    vec4 wp=modelMatrix*vec4(position,1.0);
+    vWorldNormal=normalize(mat3(modelMatrix)*normal);
+    vViewDir=normalize(cameraPosition-wp.xyz);
+    gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);
+  }`;
+
+const planetFrag = `
+  uniform vec3 uLightDir;uniform vec3 uLightColor;uniform vec3 uAmbient;
+  varying vec3 vWorldNormal;varying vec3 vViewDir;varying vec3 vLocalPos;
+
+  float h3(vec3 p){p=fract(p*vec3(443.897,397.297,491.187));p+=dot(p,p.yxz+19.19);return fract(p.x*p.y*p.z);}
+  float vn(vec3 p){vec3 i=floor(p),f=fract(p),u=f*f*(3.-2.*f);return mix(mix(mix(h3(i),h3(i+vec3(1,0,0)),u.x),mix(h3(i+vec3(0,1,0)),h3(i+vec3(1,1,0)),u.x),u.y),mix(mix(h3(i+vec3(0,0,1)),h3(i+vec3(1,0,1)),u.x),mix(h3(i+vec3(0,1,1)),h3(i+vec3(1,1,1)),u.x),u.y),u.z);}
+  float fbm(vec3 p){float v=0.,a=0.52;for(int i=0;i<6;i++){v+=a*vn(p);p=p*2.08+vec3(1.73,2.17,0.93);a*=0.47;}return v;}
+  float fbm4(vec3 p){float v=0.,a=0.52;for(int i=0;i<4;i++){v+=a*vn(p);p=p*2.08+vec3(2.13,0.87,1.61);a*=0.47;}return v;}
+
+  void main(){
+    vec3 pos=normalize(vLocalPos);
+
+    /* ── Crystal planetary structure ──
+       Broad tectonic plates → formation zones → fine crystal facets.
+       Domain warp keeps terrain organic (not mechanical noise). */
+    float wx=fbm(pos*1.10+vec3(1.4,2.8,0.6)),wy=fbm(pos*1.10+vec3(5.1,0.9,3.7));
+    vec3 wPos=pos+vec3(wx-.5,wy-.5,0.)*.30;
+    float plate   =fbm(wPos*0.82+vec3(2.4,0.5,3.1));   /* large-scale crystal plates */
+    float zone    =fbm(wPos*2.10+vec3(0.8,4.2,1.5));   /* crystal formation zones */
+    float crystal =fbm4(pos*5.60+vec3(3.2,1.8,6.4));   /* density variation */
+    float facetA  =fbm4(pos*11.0+vec3(5.1,3.4,2.2));   /* crystal face structure */
+    float terrain =plate*.38+zone*.32+crystal*.20+facetA*.10;
+
+    /* Crystal ridge detection — where two faces meet = bright catch-light */
+    float ridge=1.-clamp(abs(facetA-.50)*14.,0.,1.);
+
+    /* ── Base surface color ──
+       Dark deep blue-gray base (like black/dark labradorite).
+       The dark base makes the vivid flash zones pop. */
+    vec3 cDark =vec3(0.025,0.028,0.10);   /* deep crystal dark */
+    vec3 cStone=vec3(0.08, 0.12, 0.34);   /* stone blue mid */
+    vec3 cPearl=vec3(0.54, 0.68, 0.94);   /* pearlescent raised surface */
+    vec3 baseCol=mix(mix(cDark,cStone,smoothstep(.22,.52,terrain)),cPearl,smoothstep(.48,.86,terrain));
+    /* Ridge brightening */
+    baseCol+=vec3(.55,.72,1.0)*ridge*.07;
+
+    vec3 N=normalize(vWorldNormal),L=normalize(uLightDir),V=normalize(vViewDir),H=normalize(L+V);
+    float NdotL=dot(N,L),NdotV=max(dot(N,V),0.),NdotH=max(dot(N,H),0.);
+    float diffuse=pow(smoothstep(-.22,.28,NdotL),.78);
+
+    /* ── Crystal specular — crisp, sharp, layered ── */
+    float spec=( pow(NdotH,100.)*.28 + pow(NdotH,320.)*.36 + pow(NdotH,18.)*.06 )*diffuse;
+    /* Rainbow specular tint — shifts with view angle */
+    float iridV=pow(1.-NdotV,1.4);
+    vec3 specHue=mix(vec3(.80,.92,1.0),mix(vec3(.30,.92,.68),vec3(1.0,.86,.44),iridV),iridV*.80);
+
+    vec3 lit=baseCol*(uAmbient+uLightColor*diffuse*.76)+uLightColor*specHue*spec;
+
+    /* ── Crystal ridge specular flash ── */
+    lit+=vec3(.72,.86,1.0)*ridge*pow(NdotH,160.)*diffuse*.70;
+
+    /* ── Moonstone adularescence ──
+       Soft blue floating glow — strongest at mid-view-angles.
+       The characteristic "moon glow" of moonstone / adularia. */
+    float adul=sin(NdotV*3.14159);  /* peaks at NdotV=0.5, zero at edges */
+    adul=pow(adul,1.6)*.38;
+    lit+=vec3(.18,.52,1.0)*adul*smoothstep(-.10,.45,NdotL);
+
+    /* ── Labradorescence flash zones ──
+       The defining feature: specific crystal plate regions that flash
+       vivid color when the reflected ray aligns with that zone's plane.
+       These zones are baked into geography — they rotate with the planet.
+       As view angle changes (planet rotates), each zone flashes its color.
+
+       Three planes → three colors: cobalt blue / warm gold / soft lavender */
+    vec3 R=reflect(-V,N);  /* reflected view ray */
+    vec3 pA=normalize(vec3( 0.66, 0.74, 0.10));
+    vec3 pB=normalize(vec3(-0.48, 0.58, 0.66));
+    vec3 pC=normalize(vec3( 0.22,-0.70, 0.68));
+
+    /* Geographic zones — each covers ~1/3 of the surface in distinct patches */
+    float zA=smoothstep(.40,.65,fbm(pos*1.20+vec3(0.00,0.00,0.00)));
+    float zB=smoothstep(.42,.66,fbm(pos*1.10+vec3(3.30,1.80,2.50)));
+    float zC=smoothstep(.44,.68,fbm(pos*0.92+vec3(6.20,4.40,1.70)));
+
+    /* Flash intensity: alignment of reflected ray with plane × zone presence */
+    float fA=pow(max(0.,dot(R,pA)),7.)*zA;
+    float fB=pow(max(0.,dot(R,pB)),7.)*zB;
+    float fC=pow(max(0.,dot(R,pC)),7.)*zC;
+
+    /* Colors: cobalt blue, warm gold, soft lavender */
+    vec3 labCol=fA*vec3(.10,.60,1.00)*1.80
+               +fB*vec3(1.00,.80,.18)*1.50
+               +fC*vec3(.72,.28,1.00)*1.40;
+
+    /* Flash is brighter in elevated crystal terrain regions */
+    lit+=labCol*(0.65+terrain*.55);
+
+    /* ── Internal luminous core ──
+       Crystal feels lit from within — warm blue-white glow at depth. */
+    float coreGlow=smoothstep(.46,.90,terrain)*.12;
+    vec3 coreHue=mix(vec3(.24,.52,1.0),vec3(.68,.86,1.0),terrain);
+    lit+=coreHue*coreGlow;
+
+    /* ── Iridescent fresnel rim ──
+       Edge of planet shows rainbow shift — tight, not fluffy. */
+    float fresnel=pow(1.-NdotV,2.2);
+    float fT=clamp(fresnel*2.5,0.,2.);
+    vec3 rimA=vec3(.68,.86,1.0);  /* blue-white */
+    vec3 rimB=vec3(.28,.94,.66);  /* mint */
+    vec3 rimC=vec3(1.0,.88,.44);  /* warm gold */
+    vec3 rimCol=mix(rimA,rimB,clamp(fT,0.,1.));
+    rimCol=mix(rimCol,rimC,clamp(fT-1.,0.,1.));
+    lit+=rimCol*fresnel*smoothstep(-.25,.55,NdotL)*.22;
+
+    gl_FragColor=vec4(lit,1.0);
+  }`;
+
+/* ═══════════════════════════════════════════════════
+   ATMOSPHERE — iridescent thin mist, not chunky clouds
+   Just an elegant rainbow rim haze
+═══════════════════════════════════════════════════ */
+const atmoVert = `
+  varying vec3 vWorldNormal;varying vec3 vViewDir;
+  void main(){
+    vec4 wp=modelMatrix*vec4(position,1.0);
+    vWorldNormal=normalize(mat3(modelMatrix)*normal);
+    vViewDir=normalize(cameraPosition-wp.xyz);
+    gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);
+  }`;
+const atmoFrag = `
+  uniform vec3 uLightDir;varying vec3 vWorldNormal;varying vec3 vViewDir;
+  void main(){
+    vec3 N=normalize(vWorldNormal),V=normalize(vViewDir),L=normalize(uLightDir);
+    float NdotV=max(dot(N,V),0.),NdotL=dot(N,L);
+    /* Extremely tight edge — visible only at grazing angles */
+    float fresnel=pow(1.-NdotV,5.2);
+    float litGate=smoothstep(-.18,.45,NdotL);
+    /* Rainbow iridescent edge — shifts blue→mint→gold across the rim */
+    float iridT=pow(1.-NdotV,1.8);
+    vec3 col=mix(vec3(.30,.72,1.0),vec3(.28,.96,.62),smoothstep(0.,.5,iridT));
+    col=mix(col,vec3(1.0,.86,.40),smoothstep(.5,1.,iridT));
+    float alpha=fresnel*(litGate*.22+(1.-litGate)*.008);
+    gl_FragColor=vec4(col,alpha);
+  }`;
+
+/* ── Planet ── */
+const planet = new THREE.Mesh(
+  new THREE.SphereGeometry(1.0, 128, 128),
+  new THREE.ShaderMaterial({
+    uniforms:{
+      uLightDir:   { value: lightDir },
+      uLightColor: { value: new THREE.Color(1.00, 0.97, 0.92) },
+      uAmbient:    { value: new THREE.Color(0.006, 0.008, 0.020) },
+    },
+    vertexShader: planetVert, fragmentShader: planetFrag,
+  })
+);
+world.add(planet);
+
+/* ── Atmosphere ── */
+const atmo = new THREE.Mesh(
+  new THREE.SphereGeometry(1.038, 32, 32),
+  new THREE.ShaderMaterial({
+    uniforms:{ uLightDir:{ value:lightDir } },
+    vertexShader:atmoVert, fragmentShader:atmoFrag,
+    side:THREE.BackSide, transparent:true,
+    blending:THREE.AdditiveBlending, depthWrite:false, depthTest:false,
+  })
+);
+world.add(atmo);
+
+/* ═══════════════════════════════════════════════════
+   ORBITAL ELEMENTS:
+   1. Faint ghost orbit path — just a visual suggestion
+   2. Bright star-point sparkles: cobalt, gold, lavender
+      matching the three labradorescence zones
+═══════════════════════════════════════════════════ */
+
+/* Faint orbit ring path */
+{
+  const pts = [];
+  for(let i=0; i<=128; i++){
+    const a = i/128 * Math.PI * 2;
+    pts.push(new THREE.Vector3(Math.cos(a)*1.32, 0, Math.sin(a)*1.32));
+  }
+  const orbLine = new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints(pts),
+    new THREE.LineBasicMaterial({
+      color: new THREE.Color(0.40, 0.65, 1.00),
+      transparent:true, opacity:0.07,
+      blending:THREE.AdditiveBlending,
+    })
+  );
+  orbLine.rotation.x = 0.30;  /* slight tilt */
+  world.add(orbLine);
+}
+
+/* Star sparkle particles */
+let sparkles;
+{
+  const N = 80;
+  const pos = new Float32Array(N*3);
+  const alp = new Float32Array(N);
+  const siz = new Float32Array(N);
+  const phs = new Float32Array(N);
+  const typ = new Float32Array(N);  /* 0=cobalt blue, 0.5=gold, 1.0=lavender */
+
+  for(let i=0; i<N; i++){
+    const theta = Math.random() * Math.PI * 2;
+    const phi   = (Math.random()-.5) * Math.PI * 0.55;  /* ±50° elevation */
+    const r     = 1.15 + Math.random() * 0.32;           /* 1.15 — 1.47 */
+    pos[i*3]   = Math.cos(phi)*Math.cos(theta)*r;
+    pos[i*3+1] = Math.sin(phi)*r;
+    pos[i*3+2] = Math.cos(phi)*Math.sin(theta)*r;
+    alp[i] = 0.30 + Math.random()*0.46;
+    siz[i] = Math.random();
+    phs[i] = Math.random()*Math.PI*2;
+    /* Distribute colors to match labradorescence zones: more blue overall */
+    const t = Math.random();
+    typ[i] = t < 0.42 ? 0.0 : t < 0.72 ? 0.5 : 1.0;
+  }
+
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  geo.setAttribute('alpha',    new THREE.BufferAttribute(alp, 1));
+  geo.setAttribute('size',     new THREE.BufferAttribute(siz, 1));
+  geo.setAttribute('phase',    new THREE.BufferAttribute(phs, 1));
+  geo.setAttribute('colorType',new THREE.BufferAttribute(typ, 1));
+
+  sparkles = new THREE.Points(geo, new THREE.ShaderMaterial({
+    uniforms:{ uTime:{ value:0.0 } },
+    vertexShader:`
+      attribute float alpha;attribute float size;attribute float phase;attribute float colorType;
+      uniform float uTime;
+      varying float vA;varying float vSz;varying float vTwinkle;varying float vType;
+      void main(){
+        vA=alpha;vSz=size;vType=colorType;
+        /* Per-particle twinkle — each star breathes at its own rate */
+        vTwinkle=0.45+0.55*sin(uTime*2.80+phase);
+        float pSize=mix(0.70,3.0,size)*(0.75+0.25*vTwinkle);
+        vec4 mv=modelViewMatrix*vec4(position,1.0);
+        gl_PointSize=pSize*(360./-mv.z);
+        gl_Position=projectionMatrix*mv;
+      }`,
+    fragmentShader:`
+      varying float vA;varying float vSz;varying float vTwinkle;varying float vType;
+      void main(){
+        vec2 uv=gl_PointCoord-.5;
+        float d=length(uv);
+        /* Sharp 4-point star — crisp, not blurry */
+        float core=exp(-d*d*80.);
+        float armH=exp(-uv.x*uv.x*220.)*exp(-uv.y*uv.y*12.);
+        float armV=exp(-uv.y*uv.y*220.)*exp(-uv.x*uv.x*12.);
+        float star=core+max(armH,armV)*.38;
+        float a=clamp(star*vA*vTwinkle,0.,1.);
+        /* Three colors matching labradorescence zones */
+        vec3 cobalt =vec3(0.50,0.80,1.00);
+        vec3 gold   =vec3(1.00,0.88,0.40);
+        vec3 lavender=vec3(0.80,0.55,1.00);
+        vec3 col=mix(cobalt,mix(gold,lavender,smoothstep(.65,1.0,vType)),smoothstep(.20,.55,vType));
+        gl_FragColor=vec4(col,a*.92);
+      }`,
+    transparent:true,
+    blending:THREE.AdditiveBlending,
+    depthWrite:false,
+    depthTest:true,
+  }));
+  world.add(sparkles);
+}
+
+/* ── Mouse ── */
+let tgtX=0,tgtY=0,curX=0,curY=0;
+document.addEventListener('mousemove',e=>{
+  tgtY=((e.clientX/window.innerWidth) -.5)*.18;
+  tgtX=((e.clientY/window.innerHeight)-.5)*.10;
+});
+
+/* ── Render loop ── */
+const clock = new THREE.Clock();
+(function animate(){
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+  curX+=(tgtX-curX)*.022;
+  curY+=(tgtY-curY)*.022;
+
+  /* Planet — slow curious rotation. The labradorescence flash shifts as it turns. */
+  planet.rotation.y = t*.034 + curY;
+  planet.rotation.x = curX*.58;
+
+  /* Atmosphere — fractionally different rate */
+  atmo.rotation.y = t*.038;
+  atmo.rotation.x = Math.sin(t*.028)*.014;
+
+  /* Sparkles — 3D cloud orbits slowly, gentle wobble */
+  sparkles.rotation.y = t*.018;
+  sparkles.rotation.z = Math.sin(t*.036)*.026;
+  sparkles.rotation.x = Math.sin(t*.024)*.018;
+  sparkles.material.uniforms.uTime.value = t;
+
+  /* Ghost orbit ring — precesses very slowly */
+  world.children.find(c=>c.isLine).rotation.y = t*.006;
+
+  /* World float + parallax */
+  world.position.x = Math.sin(t*.022)*.038 + curY*.26;
+  world.position.y = Math.cos(t*.018)*.028 - curX*.15;
+
+  renderer.render(scene,camera);
+})();
+</script>
+
+</body>
+</html>

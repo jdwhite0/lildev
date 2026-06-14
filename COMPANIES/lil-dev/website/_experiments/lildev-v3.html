@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lil Dev — V3 Prototype</title>
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: radial-gradient(ellipse at 40% 45%, #04061a 0%, #020208 55%, #010105 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Georgia', serif;
+    }
+    .stage-wrap { display:flex; flex-direction:column; align-items:center; gap:32px; }
+    .stage { position:relative; width:280px; height:280px; overflow:visible; }
+    .label { letter-spacing:.30em; font-size:10px; color:rgba(180,210,255,.50); text-transform:uppercase; }
+    .note  { font-size:10px; color:rgba(160,185,220,.26); letter-spacing:.10em; text-align:center; line-height:2.0; }
+  </style>
+</head>
+<body>
+
+<div class="stage-wrap">
+  <div class="stage"></div>
+  <div class="label">Lil Dev</div>
+  <div class="note">V3 Prototype — Labradorite Crystal World<br>jdwhite.world galaxy system</div>
+</div>
+
+<script type="module">
+import * as THREE from 'https://unpkg.com/three@0.165.0/build/three.module.min.js';
+
+const stage  = document.querySelector('.stage');
+const SZ     = 280;
+const canvas = document.createElement('canvas');
+stage.appendChild(canvas);
+
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(SZ, SZ);
+canvas.style.cssText = `position:absolute;top:0;left:0;width:${SZ}px;height:${SZ}px;display:block;`;
+renderer.toneMapping         = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.10;
+
+const scene  = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(44, 1, 0.1, 100);
+camera.position.set(0, 0, 4.8);
+
+const lightDir = new THREE.Vector3(0.60, 0.48, 0.64).normalize();
+const world    = new THREE.Group();
+scene.add(world);
+
+/* ═══════════════════════════════════════════════════
+   PLANET — labradorite precious-stone crystal world
+   V3 additions: crystal fracture seams + erosion pitting
+═══════════════════════════════════════════════════ */
+const planetVert = `
+  varying vec3 vWorldNormal;varying vec3 vViewDir;varying vec3 vLocalPos;
+  void main(){
+    vLocalPos=position;
+    vec4 wp=modelMatrix*vec4(position,1.0);
+    vWorldNormal=normalize(mat3(modelMatrix)*normal);
+    vViewDir=normalize(cameraPosition-wp.xyz);
+    gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);
+  }`;
+
+const planetFrag = `
+  uniform vec3 uLightDir;uniform vec3 uLightColor;uniform vec3 uAmbient;
+  varying vec3 vWorldNormal;varying vec3 vViewDir;varying vec3 vLocalPos;
+
+  float h3(vec3 p){p=fract(p*vec3(443.897,397.297,491.187));p+=dot(p,p.yxz+19.19);return fract(p.x*p.y*p.z);}
+  float vn(vec3 p){vec3 i=floor(p),f=fract(p),u=f*f*(3.-2.*f);return mix(mix(mix(h3(i),h3(i+vec3(1,0,0)),u.x),mix(h3(i+vec3(0,1,0)),h3(i+vec3(1,1,0)),u.x),u.y),mix(mix(h3(i+vec3(0,0,1)),h3(i+vec3(1,0,1)),u.x),mix(h3(i+vec3(0,1,1)),h3(i+vec3(1,1,1)),u.x),u.y),u.z);}
+  float fbm(vec3 p){float v=0.,a=0.52;for(int i=0;i<6;i++){v+=a*vn(p);p=p*2.08+vec3(1.73,2.17,0.93);a*=0.47;}return v;}
+  float fbm4(vec3 p){float v=0.,a=0.52;for(int i=0;i<4;i++){v+=a*vn(p);p=p*2.08+vec3(2.13,0.87,1.61);a*=0.47;}return v;}
+
+  void main(){
+    vec3 pos=normalize(vLocalPos);
+
+    float wx=fbm(pos*1.10+vec3(1.4,2.8,0.6)),wy=fbm(pos*1.10+vec3(5.1,0.9,3.7));
+    vec3 wPos=pos+vec3(wx-.5,wy-.5,0.)*.30;
+    float plate =fbm(wPos*0.82+vec3(2.4,0.5,3.1));
+    float zone  =fbm(wPos*2.10+vec3(0.8,4.2,1.5));
+    float crystal=fbm4(pos*5.60+vec3(3.2,1.8,6.4));
+    float facetA =fbm4(pos*11.0+vec3(5.1,3.4,2.2));
+    float terrain=plate*.38+zone*.32+crystal*.20+facetA*.10;
+
+    float ridge=1.-clamp(abs(facetA-.50)*14.,0.,1.);
+
+    vec3 cDark =vec3(0.025,0.028,0.10);
+    vec3 cStone=vec3(0.08, 0.12, 0.34);
+    vec3 cPearl=vec3(0.54, 0.68, 0.94);
+    vec3 baseCol=mix(mix(cDark,cStone,smoothstep(.22,.52,terrain)),cPearl,smoothstep(.48,.86,terrain));
+    baseCol+=vec3(.55,.72,1.0)*ridge*.07;
+
+    /* ── V3: Crystal fracture network — hairline luminous seams ──
+       Two independent crack networks at different scales.
+       Narrow bands in FBM at distinct threshold values = hairlines. */
+    float crA=1.-clamp(abs(fbm4(pos*20.+vec3(3.8,1.2,6.4))-.50)*22.,0.,1.);
+    float crB=1.-clamp(abs(fbm4(pos*32.+vec3(8.1,4.7,1.3))-.50)*28.,0.,1.);
+    float fracture=max(crA*crA,crB*crB);
+    /* Seam color shifts from cobalt blue to near-white depending on terrain */
+    vec3 seamHue=mix(vec3(.28,.58,1.0),vec3(.82,.92,1.0),terrain);
+    baseCol+=seamHue*fracture*.16;
+
+    /* ── V3: Subtle erosion pitting — ancient impact marks ── */
+    float erode=smoothstep(.68,.74,fbm(pos*3.40+vec3(7.1,2.4,5.8)));
+    baseCol=mix(baseCol,baseCol*.72,erode*.18);
+
+    vec3 N=normalize(vWorldNormal),L=normalize(uLightDir),V=normalize(vViewDir),H=normalize(L+V);
+    float NdotL=dot(N,L),NdotV=max(dot(N,V),0.),NdotH=max(dot(N,H),0.);
+    float diffuse=pow(smoothstep(-.22,.28,NdotL),.78);
+
+    float spec=( pow(NdotH,100.)*.28 + pow(NdotH,320.)*.36 + pow(NdotH,18.)*.06 )*diffuse;
+    float iridV=pow(1.-NdotV,1.4);
+    vec3 specHue=mix(vec3(.80,.92,1.0),mix(vec3(.30,.92,.68),vec3(1.0,.86,.44),iridV),iridV*.80);
+
+    vec3 lit=baseCol*(uAmbient+uLightColor*diffuse*.76)+uLightColor*specHue*spec;
+    lit+=vec3(.72,.86,1.0)*ridge*pow(NdotH,160.)*diffuse*.70;
+
+    /* Fracture seams catch extra specular — luminous crack lines */
+    lit+=seamHue*fracture*pow(NdotH,80.)*diffuse*.50;
+
+    float adul=sin(NdotV*3.14159);
+    adul=pow(adul,1.6)*.38;
+    lit+=vec3(.18,.52,1.0)*adul*smoothstep(-.10,.45,NdotL);
+
+    vec3 R=reflect(-V,N);
+    vec3 pA=normalize(vec3( 0.66, 0.74, 0.10));
+    vec3 pB=normalize(vec3(-0.48, 0.58, 0.66));
+    vec3 pC=normalize(vec3( 0.22,-0.70, 0.68));
+    float zA=smoothstep(.40,.65,fbm(pos*1.20+vec3(0.00,0.00,0.00)));
+    float zB=smoothstep(.42,.66,fbm(pos*1.10+vec3(3.30,1.80,2.50)));
+    float zC=smoothstep(.44,.68,fbm(pos*0.92+vec3(6.20,4.40,1.70)));
+    float fA=pow(max(0.,dot(R,pA)),7.)*zA;
+    float fB=pow(max(0.,dot(R,pB)),7.)*zB;
+    float fC=pow(max(0.,dot(R,pC)),7.)*zC;
+    vec3 labCol=fA*vec3(.10,.60,1.00)*1.80+fB*vec3(1.00,.80,.18)*1.50+fC*vec3(.72,.28,1.00)*1.40;
+    lit+=labCol*(0.65+terrain*.55);
+
+    float coreGlow=smoothstep(.46,.90,terrain)*.12;
+    vec3 coreHue=mix(vec3(.24,.52,1.0),vec3(.68,.86,1.0),terrain);
+    lit+=coreHue*coreGlow;
+
+    float fresnel=pow(1.-NdotV,2.2);
+    float fT=clamp(fresnel*2.5,0.,2.);
+    vec3 rimA=vec3(.68,.86,1.0),rimB=vec3(.28,.94,.66),rimC=vec3(1.0,.88,.44);
+    vec3 rimCol=mix(rimA,rimB,clamp(fT,0.,1.));
+    rimCol=mix(rimCol,rimC,clamp(fT-1.,0.,1.));
+    lit+=rimCol*fresnel*smoothstep(-.25,.55,NdotL)*.22;
+
+    gl_FragColor=vec4(lit,1.0);
+  }`;
+
+/* ── Atmosphere — V3: tighter Fresnel, sharper edge precision ── */
+const atmoVert = `
+  varying vec3 vWorldNormal;varying vec3 vViewDir;
+  void main(){
+    vec4 wp=modelMatrix*vec4(position,1.0);
+    vWorldNormal=normalize(mat3(modelMatrix)*normal);
+    vViewDir=normalize(cameraPosition-wp.xyz);
+    gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);
+  }`;
+const atmoFrag = `
+  uniform vec3 uLightDir;varying vec3 vWorldNormal;varying vec3 vViewDir;
+  void main(){
+    vec3 N=normalize(vWorldNormal),V=normalize(vViewDir),L=normalize(uLightDir);
+    float NdotV=max(dot(N,V),0.),NdotL=dot(N,L);
+    /* V3: tighter power (6.5 vs 5.2) — sharper edge, no softness bleed */
+    float fresnel=pow(1.-NdotV,6.5);
+    float litGate=smoothstep(-.18,.45,NdotL);
+    float iridT=pow(1.-NdotV,1.8);
+    vec3 col=mix(vec3(.30,.72,1.0),vec3(.28,.96,.62),smoothstep(0.,.5,iridT));
+    col=mix(col,vec3(1.0,.86,.40),smoothstep(.5,1.,iridT));
+    /* V3: slightly lower alpha — more precise, less foggy */
+    float alpha=fresnel*(litGate*.16+(1.-litGate)*.006);
+    gl_FragColor=vec4(col,alpha);
+  }`;
+
+const planet = new THREE.Mesh(
+  new THREE.SphereGeometry(1.0, 128, 128),
+  new THREE.ShaderMaterial({
+    uniforms:{
+      uLightDir:   { value:lightDir },
+      uLightColor: { value:new THREE.Color(1.00,0.97,0.92) },
+      uAmbient:    { value:new THREE.Color(0.006,0.008,0.020) },
+    },
+    vertexShader:planetVert, fragmentShader:planetFrag,
+  })
+);
+world.add(planet);
+
+const atmo = new THREE.Mesh(
+  new THREE.SphereGeometry(1.038, 32, 32),
+  new THREE.ShaderMaterial({
+    uniforms:{ uLightDir:{ value:lightDir } },
+    vertexShader:atmoVert, fragmentShader:atmoFrag,
+    side:THREE.BackSide, transparent:true,
+    blending:THREE.AdditiveBlending, depthWrite:false, depthTest:false,
+  })
+);
+world.add(atmo);
+
+/* ── Ghost orbit ring ── */
+{
+  const pts=[];
+  for(let i=0;i<=128;i++){
+    const a=i/128*Math.PI*2;
+    pts.push(new THREE.Vector3(Math.cos(a)*1.32,0,Math.sin(a)*1.32));
+  }
+  const orbLine=new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints(pts),
+    new THREE.LineBasicMaterial({ color:new THREE.Color(.40,.65,1.), transparent:true, opacity:.07, blending:THREE.AdditiveBlending })
+  );
+  orbLine.rotation.x=0.30;
+  world.add(orbLine);
+}
+
+/* ═══════════════════════════════════════════════════
+   V3 ORBITAL FX — crystal optical diffraction flares
+   ───────────────────────────────────────────────────
+   Root problem with V2: gl_PointSize multiplier was 360.
+   At camera depth -3.5, that gives factor 103 — so even
+   the smallest particle was 72px. Result = huge blurry blobs.
+
+   V3 fix: multiplier 38. → particles are 6–32px.
+   At that scale, hairline streak + chromatic aberration
+   reads as optical crystal refraction, not sticker art.
+═══════════════════════════════════════════════════ */
+let sparkles;
+{
+  const N=100;
+  const pos=new Float32Array(N*3);
+  const alp=new Float32Array(N);
+  const siz=new Float32Array(N);
+  const phs=new Float32Array(N);   /* used as: twinkle phase + streak rotation angle */
+  const typ=new Float32Array(N);   /* 0=cobalt, 0.5=gold, 1.0=lavender */
+
+  for(let i=0;i<N;i++){
+    const theta=Math.random()*Math.PI*2;
+    const phi  =(Math.random()-.5)*Math.PI*.55;
+    const r    =1.14+Math.random()*.36;
+    pos[i*3]  =Math.cos(phi)*Math.cos(theta)*r;
+    pos[i*3+1]=Math.sin(phi)*r;
+    pos[i*3+2]=Math.cos(phi)*Math.sin(theta)*r;
+    alp[i]=0.28+Math.random()*.50;
+    siz[i]=Math.random();
+    phs[i]=Math.random()*Math.PI*2;
+    const t=Math.random();
+    typ[i]=t<.42?0.0:t<.72?0.5:1.0;
+  }
+
+  const geo=new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+  geo.setAttribute('alpha',    new THREE.BufferAttribute(alp,1));
+  geo.setAttribute('size',     new THREE.BufferAttribute(siz,1));
+  geo.setAttribute('phase',    new THREE.BufferAttribute(phs,1));
+  geo.setAttribute('colorType',new THREE.BufferAttribute(typ,1));
+
+  sparkles=new THREE.Points(geo,new THREE.ShaderMaterial({
+    uniforms:{ uTime:{ value:0.0 } },
+
+    vertexShader:`
+      attribute float alpha;attribute float size;attribute float phase;attribute float colorType;
+      uniform float uTime;
+      varying float vA;varying float vSz;varying float vTwinkle;varying float vType;
+      void main(){
+        vA=alpha;vSz=size;vType=colorType;
+        /* Slow independent breathe — each gem pulses at its own rate */
+        vTwinkle=0.36+0.64*sin(uTime*1.80+phase*3.60);
+        /* Correct size: 7–26px at typical orbital depth */
+        float baseSize=mix(0.62,2.50,size);
+        vec4 mv=modelViewMatrix*vec4(position,1.0);
+        gl_PointSize=baseSize*(38./-mv.z);
+        gl_Position=projectionMatrix*mv;
+      }`,
+
+    fragmentShader:`
+      varying float vA;varying float vSz;varying float vTwinkle;varying float vType;
+      void main(){
+        vec2 uv=gl_PointCoord-.5;
+        float d=length(uv);
+
+        /* Soft luminous core — primary visual weight, like light inside a gem */
+        float core=exp(-d*d*86.);
+        /* Outer diffusion aura — the warm glow radius */
+        float aura=exp(-d*d*18.)*0.22;
+
+        /* Thin 4-point star arms — crystal sparkle suggestion, not dominant.
+           High y-falloff (500) = very narrow arms; low x-falloff (4) = long arms.
+           At 8–26px these read as elegant shimmer, not cartoon star. */
+        float armH=exp(-uv.y*uv.y*500.)*exp(-uv.x*uv.x*4.0);
+        float armV=exp(-uv.x*uv.x*500.)*exp(-uv.y*uv.y*4.0);
+        /* Soft diagonal arms at 45° — gives the 8-point gem-light character */
+        vec2 diag=vec2((uv.x-uv.y),(uv.x+uv.y))*0.707;
+        float armD1=exp(-diag.y*diag.y*420.)*exp(-diag.x*diag.x*5.0)*0.32;
+        float armD2=exp(-diag.x*diag.x*420.)*exp(-diag.y*diag.y*5.0)*0.32;
+
+        float brightness=core+aura+max(armH,armV)*0.54+max(armD1,armD2);
+
+        /* Color: near-white hot center fades to crystal color at edge.
+           This is how a real gem reflection looks — bright white at the
+           specular point, the stone's color at the surrounding glow. */
+        vec3 cobalt  =vec3(0.46,0.78,1.00);
+        vec3 gold    =vec3(1.00,0.88,0.38);
+        vec3 lavender=vec3(0.78,0.52,1.00);
+        vec3 baseCol=mix(cobalt,mix(gold,lavender,smoothstep(.65,1.0,vType)),smoothstep(.18,.52,vType));
+        vec3 col=mix(vec3(0.92,0.96,1.0),baseCol,smoothstep(0.0,0.26,d));
+
+        float a=clamp(brightness*vA*vTwinkle*2.10,0.,1.);
+        gl_FragColor=vec4(col,a*0.88);
+      }`,
+
+    transparent:true,
+    blending:THREE.AdditiveBlending,
+    depthWrite:false,
+    depthTest:true,
+  }));
+  world.add(sparkles);
+}
+
+/* ── Mouse ── */
+let tgtX=0,tgtY=0,curX=0,curY=0;
+document.addEventListener('mousemove',e=>{
+  tgtY=((e.clientX/window.innerWidth) -.5)*.18;
+  tgtX=((e.clientY/window.innerHeight)-.5)*.10;
+});
+
+/* ── Render loop ── */
+const clock=new THREE.Clock();
+(function animate(){
+  requestAnimationFrame(animate);
+  const t=clock.getElapsedTime();
+  curX+=(tgtX-curX)*.022;
+  curY+=(tgtY-curY)*.022;
+
+  planet.rotation.y=t*.034+curY;
+  planet.rotation.x=curX*.58;
+
+  atmo.rotation.y=t*.038;
+  atmo.rotation.x=Math.sin(t*.028)*.014;
+
+  sparkles.rotation.y=t*.018;
+  sparkles.rotation.z=Math.sin(t*.036)*.026;
+  sparkles.rotation.x=Math.sin(t*.024)*.018;
+  sparkles.material.uniforms.uTime.value=t;
+
+  world.children.find(c=>c.isLine).rotation.y=t*.006;
+
+  world.position.x=Math.sin(t*.022)*.038+curY*.26;
+  world.position.y=Math.cos(t*.018)*.028-curX*.15;
+
+  renderer.render(scene,camera);
+})();
+</script>
+
+</body>
+</html>
