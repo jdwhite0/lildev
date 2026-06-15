@@ -222,7 +222,7 @@
       position: relative;
       overflow: hidden;
       width: 100%;
-      max-width: 380px;
+      max-width: 460px;
       margin-top: auto;
       background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.003) 100%);
       border: 1px solid rgba(255, 255, 255, 0.05);
@@ -238,26 +238,38 @@
         0 0 90px rgba(160, 100, 255, 0.05),
         inset 0 0 20px rgba(255, 255, 255, 0.02);
       border-radius: 20px;
-      padding: 30px 28px;
-      text-align: center;
+      padding: 26px 24px;
+      text-align: left;
       z-index: 15;
       animation: slideUp 2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
     }
-    .waitlist-card::after {
-      content: "";
-      position: absolute;
-      top: -10px;
-      left: -10px;
-      width: 130px;
-      height: 130px;
-      background: url('/assets/images/devin-excited.webp') no-repeat center/contain;
-      opacity: 0.16;
+    .card-content-wrapper {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+    }
+    .card-character-side {
+      flex-shrink: 0;
+      width: 110px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .card-character-img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.45));
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 65%, rgba(0,0,0,0) 100%);
+      -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 65%, rgba(0,0,0,0) 100%);
       pointer-events: none;
-      z-index: 1;
-      transform: rotate(6deg);
-      filter: brightness(1.1) contrast(0.95);
-      mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%);
-      -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%);
+    }
+    .card-text-side {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
     }
     .waitlist-title, .waitlist-desc, #waitlist-form-container, .waitlist-links {
       position: relative;
@@ -388,7 +400,7 @@
     .waitlist-links {
       margin-top: 16px;
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
       gap: 16px;
     }
     .parent-link {
@@ -445,6 +457,27 @@
       0% { opacity: 0.3; }
       100% { opacity: 1; }
     }
+    @media (max-width: 480px) {
+      .waitlist-card {
+        max-width: 380px;
+        text-align: center;
+        padding: 24px 20px;
+      }
+      .card-content-wrapper {
+        flex-direction: column;
+        gap: 12px;
+      }
+      .card-character-side {
+        width: 95px;
+      }
+      .card-character-img {
+        mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%);
+        -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%);
+      }
+      .waitlist-links {
+        justify-content: center;
+      }
+    }
   </style>
 </head>
 <body>
@@ -471,16 +504,25 @@
 
     <!-- Waitlist / Sign In card -->
     <div class="waitlist-card">
-      <div class="waitlist-title">Lil Dev World</div>
-      <div class="waitlist-desc">A space of curiosity, discovery, and learning is spinning into existence. Join the waitlist for invite access keys.</div>
-      <div id="waitlist-form-container">
-        <form class="waitlist-form" onsubmit="handleWaitlist(event)">
-          <input type="email" id="waitlist-email" placeholder="Email address" required class="waitlist-input">
-          <button type="submit" class="waitlist-btn">Submit Email</button>
-        </form>
-      </div>
-      <div class="waitlist-links">
-        <a href="javascript:void(0)" onclick="enterWorld()" class="parent-link">Enter the World</a>
+      <div class="card-content-wrapper">
+        <!-- Left Side: Peeking Character -->
+        <div class="card-character-side">
+          <img src="/assets/images/devin-excited.webp" alt="Lil Dev" class="card-character-img">
+        </div>
+        <!-- Right Side: Content -->
+        <div class="card-text-side">
+          <div class="waitlist-title">Lil Dev World</div>
+          <div class="waitlist-desc">A space of curiosity, discovery, and learning is spinning into existence. Join the waitlist for invite access keys.</div>
+          <div id="waitlist-form-container">
+            <form class="waitlist-form" onsubmit="handleWaitlist(event)">
+              <input type="email" id="waitlist-email" placeholder="Email address" required class="waitlist-input">
+              <button type="submit" class="waitlist-btn">Submit Email</button>
+            </form>
+          </div>
+          <div class="waitlist-links">
+            <a href="javascript:void(0)" onclick="enterWorld()" class="parent-link">Enter the World</a>
+          </div>
+        </div>
       </div>
 
       <script>
