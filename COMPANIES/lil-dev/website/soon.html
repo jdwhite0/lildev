@@ -224,19 +224,19 @@
       width: 100%;
       max-width: 460px;
       margin-top: auto;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.003) 100%);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-top: 1px solid rgba(255, 255, 255, 0.22);
-      border-left: 1px solid rgba(255, 255, 255, 0.14);
+      background: linear-gradient(135deg, rgba(255, 225, 97, 0.035) 0%, rgba(255, 225, 97, 0.005) 100%);
+      border: 1px solid rgba(255, 225, 97, 0.08);
+      border-top: 1px solid rgba(255, 225, 97, 0.35);
+      border-left: 1px solid rgba(255, 225, 97, 0.25);
       backdrop-filter: blur(50px) saturate(180%);
       -webkit-backdrop-filter: blur(50px) saturate(180%);
       box-shadow: 
-        inset 0 1px 1px rgba(255, 255, 255, 0.22),
+        inset 0 1px 1px rgba(255, 225, 97, 0.25),
         inset 0 -1px 1px rgba(0, 0, 0, 0.35),
         0 25px 65px rgba(0, 0, 0, 0.65),
-        0 0 45px rgba(100, 160, 255, 0.10),
-        0 0 90px rgba(160, 100, 255, 0.05),
-        inset 0 0 20px rgba(255, 255, 255, 0.02);
+        0 0 45px rgba(255, 225, 97, 0.12),
+        0 0 90px rgba(255, 194, 14, 0.06),
+        inset 0 0 20px rgba(255, 225, 97, 0.02);
       border-radius: 20px;
       padding: 26px 24px;
       text-align: left;
@@ -367,28 +367,30 @@
       width: 100%;
       padding: 13px;
       border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-top: 1px solid rgba(255, 255, 255, 0.28);
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.015) 100%);
-      color: var(--white);
-      font-family: var(--font-sans);
-      font-size: 0.8rem;
-      font-weight: 600;
+      border: 1px solid rgba(255, 255, 255, 0.40);
+      border-top: 1px solid rgba(255, 255, 255, 0.75);
+      border-left: 1px solid rgba(255, 255, 255, 0.55);
+      background: linear-gradient(135deg, #FFE161 0%, #FFC20E 100%);
+      color: #0d0c11;
+      font-family: var(--font-serif);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
       cursor: pointer;
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       box-shadow: 
-        inset 0 1px 0 rgba(255, 255, 255, 0.15),
-        0 0 20px rgba(143, 174, 255, 0.06);
+        0 4px 15px rgba(255, 225, 97, 0.25), 
+        inset 0 1px 0 rgba(255, 255, 255, 0.35);
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .waitlist-btn:hover {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 100%);
-      border-color: rgba(143, 174, 255, 0.35);
-      border-top-color: rgba(143, 174, 255, 0.5);
+      background: linear-gradient(135deg, #FFF094 0%, #FFD02D 100%);
+      border-color: rgba(255, 255, 255, 0.50);
+      border-top-color: rgba(255, 255, 255, 0.85);
       box-shadow: 
-        inset 0 1px 0 rgba(255, 255, 255, 0.2),
-        0 0 25px rgba(143, 174, 255, 0.2);
+        0 6px 22px rgba(255, 225, 97, 0.45), 
+        inset 0 1px 0 rgba(255, 255, 255, 0.50);
     }
     .waitlist-btn:active {
       transform: scale(0.98);
@@ -528,7 +530,7 @@
           <div id="waitlist-form-container">
             <form class="waitlist-form" onsubmit="handleWaitlist(event)">
               <input type="email" id="waitlist-email" placeholder="Email address" required class="waitlist-input">
-              <button type="submit" class="waitlist-btn">Submit Email</button>
+              <button type="submit" class="waitlist-btn">JOIN THE WAITLIST</button>
             </form>
           </div>
           <div class="waitlist-links">
