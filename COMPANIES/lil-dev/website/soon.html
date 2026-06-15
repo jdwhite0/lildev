@@ -242,6 +242,8 @@
       text-align: left;
       z-index: 15;
       animation: slideUp 2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+      transform: translate3d(0, 0, 0);
+      will-change: transform;
     }
     .card-content-wrapper {
       display: flex;
@@ -422,6 +424,14 @@
       display: inline-block;
       padding: 8px 12px;
       margin-left: -12px;
+      background: none;
+      border: none;
+      outline: none;
+      font-family: inherit;
+      text-align: left;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
     }
     .parent-link:hover {
       opacity: 0.7;
@@ -461,8 +471,8 @@
       to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
     }
     @keyframes slideUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translate3d(0, 20px, 0); }
+      to { opacity: 1; transform: translate3d(0, 0, 0); }
     }
     @keyframes pulse {
       0% { opacity: 0.3; }
@@ -541,7 +551,7 @@
               </form>
             </div>
             <div class="waitlist-links">
-              <a href="#" onclick="showAccessKeyView(event)" class="parent-link">Enter the World</a>
+              <button type="button" onclick="showAccessKeyView(event)" class="parent-link">Enter the World</button>
             </div>
           </div>
 
@@ -556,7 +566,7 @@
               <div id="access-key-error" style="color: #FF8F8F; font-size: 0.65rem; margin-top: 8px; font-weight: 500; display: none; text-shadow: 0 1px 4px rgba(0,0,0,0.5);">Access key incorrect.</div>
             </div>
             <div class="waitlist-links">
-              <a href="#" onclick="showWaitlistView(event)" class="parent-link">Back to Waitlist</a>
+              <button type="button" onclick="showWaitlistView(event)" class="parent-link">Back to Waitlist</button>
             </div>
           </div>
         </div>
@@ -564,19 +574,34 @@
 
       <script>
         function showAccessKeyView(e) {
-          if (e) e.preventDefault();
-          document.getElementById('waitlist-view').style.display = 'none';
-          document.getElementById('access-key-view').style.display = 'block';
-          setTimeout(() => {
-            const input = document.getElementById('access-key-input');
-            if (input) input.focus();
-          }, 50);
+          if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+          const waitlist = document.getElementById('waitlist-view');
+          const accessKey = document.getElementById('access-key-view');
+          if (waitlist) waitlist.style.display = 'none';
+          if (accessKey) accessKey.style.display = 'block';
+          
+          const input = document.getElementById('access-key-input');
+          if (input) {
+            input.focus();
+            // Try focusing in next frame for mobile virtual keyboard trigger
+            setTimeout(() => {
+              input.focus();
+            }, 20);
+          }
         }
 
         function showWaitlistView(e) {
-          if (e) e.preventDefault();
-          document.getElementById('access-key-view').style.display = 'none';
-          document.getElementById('waitlist-view').style.display = 'block';
+          if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+          const waitlist = document.getElementById('waitlist-view');
+          const accessKey = document.getElementById('access-key-view');
+          if (accessKey) accessKey.style.display = 'none';
+          if (waitlist) waitlist.style.display = 'block';
           const errDiv = document.getElementById('access-key-error');
           if (errDiv) errDiv.style.display = 'none';
         }
