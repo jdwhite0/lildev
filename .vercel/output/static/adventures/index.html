@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#3B64B6">
+  <title>Lil Dev Adventures — Stories, Books & Animated Series | Lil Dev World</title>
+  <meta name="description" content="Follow Lil Dev through kitchen discoveries, midnight courts, and hidden worlds. Books, animated stories, and interactive adventures for curious kids.">
+  <link rel="canonical" href="https://lildev.world/adventures/">
+  <meta property="og:title" content="Lil Dev Adventures — Stories, Books & Animated Series">
+  <meta property="og:description" content="Every day is a new story. Follow Lil Dev's growing adventure universe.">
+  <meta property="og:url" content="https://lildev.world/adventures/"><meta property="og:image" content="https://lildev.world/assets/images/og-cover.jpg">
+  <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://lildev.world/assets/images/og-cover.jpg">
+  <link rel="icon" href="/assets/images/lildev-logo-cropped.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"CreativeWorkSeries","@id":"https://lildev.world/adventures/#series","name":"Lil Dev Adventures","description":"A growing series of stories, books, and animated episodes following Lil Dev and Angel through curiosity-driven adventures.","url":"https://lildev.world/adventures/","genre":["Children's Fiction","Adventure","Educational"],"audience":{"@type":"Audience","suggestedMinAge":3,"suggestedMaxAge":12},"publisher":{"@id":"https://lildev.world/#organization"},"character":[{"@id":"https://lildev.world/meet-lil-dev/#character"},{"@id":"https://lildev.world/angel/#character"}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Lil Dev World","item":"https://lildev.world/"},{"@type":"ListItem","position":2,"name":"Adventures","item":"https://lildev.world/adventures/"}]}</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{--blue:#3B64B6;--blue-dk:#2A4A8A;--yellow:#FFC400;--yellow-lt:#FFD84D;--dark:#1A2340;--white:#FFFFFF;--green:#34C759;}
+    html{scroll-behavior:smooth;}body{font-family:'Inter',sans-serif;color:var(--dark);background:var(--white);overflow-x:hidden;}
+    .nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;height:64px;overflow:hidden;padding:0 2rem;background:rgba(26,35,64,0.97);backdrop-filter:blur(14px);box-shadow:0 2px 24px rgba(0,0,0,0.3);}
+    .nav-brand{display:flex;align-items:center;text-decoration:none;flex-shrink:0;}.nav-logo{height:52px;width:auto;}
+    .nav-links{display:flex;gap:0.2rem;list-style:none;}.nav-links a{font-family:'Nunito',sans-serif;font-weight:700;font-size:0.85rem;color:rgba(255,255,255,0.88);text-decoration:none;padding:0.38rem 0.75rem;border-radius:999px;transition:all 0.2s;}.nav-links a:hover{background:rgba(255,196,0,0.18);color:var(--yellow);}.nav-cta{background:var(--yellow)!important;color:var(--dark)!important;font-weight:900!important;}.nav-arrow{display:none;}
+    .page-hero{min-height:52vh;display:flex;align-items:flex-end;justify-content:center;padding:7rem 2rem 4rem;text-align:center;background:linear-gradient(175deg,#0D0828 0%,#1C0F4A 50%,#0D0828 100%);position:relative;overflow:hidden;}
+    .hero-stars{position:absolute;inset:0;pointer-events:none;}
+    .hstar{position:absolute;background:white;border-radius:50%;animation:tw 3s ease-in-out infinite;}
+    @keyframes tw{0%,100%{opacity:0.15;transform:scale(1);}50%{opacity:0.85;transform:scale(1.6);}}
+    .page-hero-content{position:relative;z-index:2;max-width:700px;}
+    .page-tag{display:inline-block;background:var(--yellow);color:var(--dark);font-family:'Nunito',sans-serif;font-weight:900;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.3rem 1rem;border-radius:999px;margin-bottom:1.2rem;}
+    .page-h1{font-family:'Fredoka',sans-serif;font-size:clamp(2.4rem,7vw,4.2rem);font-weight:700;color:var(--white);line-height:1.08;margin-bottom:0.8rem;text-shadow:0 4px 24px rgba(0,0,0,0.5);}
+    .page-sub{font-family:'Nunito',sans-serif;font-size:clamp(1rem,2.5vw,1.2rem);font-weight:700;color:rgba(255,255,255,0.78);}
+    .sec{padding:5rem 1.5rem;}.wrap{max-width:1100px;margin:0 auto;}
+    .sec-label{display:block;font-family:'Nunito',sans-serif;font-weight:900;font-size:0.78rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--yellow);margin-bottom:0.4rem;}
+    .sec-title{font-family:'Fredoka',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;color:var(--white);margin-bottom:0.5rem;}
+    .sec-sub{font-family:'Inter',sans-serif;font-size:1rem;color:rgba(255,255,255,0.65);line-height:1.7;margin-bottom:3rem;max-width:560px;}
+    .adv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.6rem;}
+    .adv-card{background:rgba(255,255,255,0.07);border:2px solid rgba(255,255,255,0.1);border-radius:1.5rem;overflow:hidden;transition:transform 0.28s ease,box-shadow 0.28s ease,border-color 0.28s ease;}
+    .adv-card:hover{transform:translateY(-8px);box-shadow:0 24px 48px rgba(0,0,0,0.4);border-color:rgba(255,196,0,0.4);}
+    .adv-img{width:100%;height:220px;object-fit:cover;display:block;transition:transform 0.4s ease;}
+    .adv-card:hover .adv-img{transform:scale(1.06);}
+    .adv-body{padding:1.6rem;}
+    .adv-tag{display:inline-block;background:rgba(255,196,0,0.18);color:var(--yellow);font-family:'Nunito',sans-serif;font-weight:800;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.2rem 0.7rem;border-radius:999px;margin-bottom:0.55rem;}
+    .adv-title{font-family:'Fredoka',sans-serif;font-size:1.35rem;font-weight:700;color:var(--white);margin-bottom:0.45rem;}
+    .adv-desc{font-family:'Inter',sans-serif;font-size:0.85rem;color:rgba(255,255,255,0.68);line-height:1.65;margin-bottom:1rem;}
+    .adv-status{display:flex;align-items:center;gap:0.4rem;font-family:'Nunito',sans-serif;font-weight:700;font-size:0.78rem;color:rgba(255,255,255,0.5);}
+    .sdot{width:8px;height:8px;border-radius:50%;background:var(--yellow);}
+    .coming-soon-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:3rem;}
+    .cs-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:1.2rem;padding:1.4rem;text-align:center;}
+    .cs-icon{font-size:2rem;display:block;margin-bottom:0.5rem;}
+    .cs-name{font-family:'Fredoka',sans-serif;font-size:1rem;font-weight:700;color:rgba(255,255,255,0.7);}
+    .cta-band{background:var(--yellow);padding:4rem 1.5rem;text-align:center;}
+    .cta-band h2{font-family:'Fredoka',sans-serif;font-size:clamp(1.8rem,5vw,2.8rem);font-weight:700;color:var(--dark);margin-bottom:0.5rem;}
+    .cta-band p{font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;color:rgba(34,34,34,0.7);margin-bottom:1.8rem;}
+    .cta-row{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+    .btn-dk{display:inline-block;background:var(--dark);color:var(--white);font-family:'Fredoka',sans-serif;font-size:1.1rem;font-weight:700;padding:0.75rem 1.8rem;border-radius:999px;text-decoration:none;transition:all 0.2s;}
+    .btn-dk:hover{transform:translateY(-2px);}
+    .footer{background:#06101E;color:rgba(255,255,255,0.65);padding:3rem 1.5rem;}
+    .footer-grid{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:2rem;}
+    .footer-logo{height:72px;width:auto;margin-bottom:0.8rem;}.footer-tag{font-family:'Nunito',sans-serif;font-size:0.88rem;color:rgba(255,255,255,0.5);line-height:1.65;margin-bottom:1.2rem;}
+    .footer-social{display:flex;gap:0.65rem;}.footer-social a{width:36px;height:36px;background:rgba(255,255,255,0.07);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.95rem;text-decoration:none;transition:background 0.2s,transform 0.2s;}.footer-social a:hover{background:var(--yellow);transform:translateY(-2px);}
+    .footer-col-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:0.76rem;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.35);margin-bottom:1rem;}
+    .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:0.5rem;}.footer-col a{font-family:'Inter',sans-serif;font-size:0.88rem;color:rgba(255,255,255,0.58);text-decoration:none;transition:color 0.2s;}.footer-col a:hover{color:var(--yellow);}
+    .footer-bottom{max-width:1120px;margin:2rem auto 0;padding-top:1.4rem;border-top:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;}.footer-bottom p,.footer-bottom a{font-family:'Inter',sans-serif;font-size:0.78rem;color:rgba(255,255,255,0.3);text-decoration:none;}.footer-bottom a:hover{color:rgba(255,196,0,0.7);}
+    @media(max-width:768px){.nav{flex-direction:column;height:auto;overflow:hidden;padding:0.55rem 1.2rem 0;align-items:center;justify-content:flex-start;cursor:pointer;}.nav-brand{justify-content:center;width:100%;padding-bottom:0.4rem;}.nav-logo{height:80px;}.nav-arrow{display:block;font-family:'Nunito',sans-serif;font-weight:900;font-size:0.72rem;color:var(--yellow);margin-bottom:0.4rem;letter-spacing:0.08em;transition:transform 0.3s;pointer-events:none;}.nav-arrow.open{transform:rotate(180deg);}.nav-links{display:flex!important;flex-direction:column;width:100%;max-height:0;overflow:hidden;transition:max-height 0.35s;gap:0;padding:0;border-top:1px solid transparent;}.nav-links.open{max-height:420px;border-top-color:rgba(255,255,255,0.1);padding:0.5rem 0 0.7rem;}.nav-links li{width:100%;}.nav-links a{display:block;text-align:center;padding:0.65rem 1rem;font-size:1rem;border-radius:0.6rem;}.footer-grid{grid-template-columns:1fr;gap:1.5rem;}.footer-bottom{justify-content:center;text-align:center;}}
+  </style>
+</head>
+<body>
+<nav class="nav" id="mainNav">
+  <a href="/" class="nav-brand" aria-label="Lil Dev World home"><img class="nav-logo" src="/assets/images/lildev-logo-cropped.png" alt="Lil Dev World logo"></a>
+  <div class="nav-arrow" id="navArrow" aria-hidden="true">▼ MENU</div>
+  <ul class="nav-links" id="navLinks" role="list">
+    <li><a href="/the-world/">The World</a></li><li><a href="/meet-lil-dev/">Meet Lil Dev</a></li>
+    <li><a href="/adventures/" aria-current="page">Adventures</a></li><li><a href="/characters/">Characters</a></li>
+    <li><a href="/learn/">Learn Lab</a></li><li><a href="/games/">Games</a></li>
+    <li><a href="/parents/">Parents</a></li><li><a href="/newsletter/" class="nav-cta">Join the World!</a></li>
+  </ul>
+</nav>
+<header class="page-hero">
+  <div class="hero-stars" id="hStars"></div>
+  <div class="page-hero-content">
+    <span class="page-tag">🚀 Lil Dev Adventures</span>
+    <h1 class="page-h1">Every Day Is a New Story</h1>
+    <p class="page-sub">Books, animated episodes, and interactive adventures — Lil Dev's universe is just getting started.</p>
+  </div>
+</header>
+<section class="sec" style="background:linear-gradient(175deg,#0D0828 0%,#1C0F4A 100%);">
+  <div class="wrap">
+    <span class="sec-label">📖 The Adventure Slate</span>
+    <h2 class="sec-title">Lil Dev's Adventures</h2>
+    <p class="sec-sub">Here's a peek at what's in the universe — and what's coming.</p>
+    <div class="adv-grid">
+      <div class="adv-card">
+        <img class="adv-img" src="/assets/images/kitchen-beam.webp" alt="Morning light in grandma's kitchen — setting of The Kitchen Discovery adventure">
+        <div class="adv-body">
+          <span class="adv-tag">📖 Book Series</span>
+          <div class="adv-title">The Kitchen Discovery</div>
+          <p class="adv-desc">Lil Dev finds something amazing in grandma's kitchen — and it kicks off the biggest science experiment of the week.</p>
+          <div class="adv-status"><span class="sdot"></span><span>Coming Soon</span></div>
+        </div>
+      </div>
+      <div class="adv-card">
+        <img class="adv-img" src="/assets/images/court-night.webp" alt="Basketball court at night under stars — setting of The Night at the Court adventure">
+        <div class="adv-body">
+          <span class="adv-tag">🎬 Animated Series</span>
+          <div class="adv-title">The Night at the Court</div>
+          <p class="adv-desc">Under the stars, Lil Dev and Angel discover that the best lessons happen when you're not even trying to learn.</p>
+          <div class="adv-status"><span class="sdot"></span><span>In Development</span></div>
+        </div>
+      </div>
+      <div class="adv-card">
+        <img class="adv-img" src="/assets/images/discovered-space.webp" alt="A hidden world discovered by Lil Dev — a mysterious space full of wonder">
+        <div class="adv-body">
+          <span class="adv-tag">🌟 Interactive Story</span>
+          <div class="adv-title">The Hidden World</div>
+          <p class="adv-desc">What happens when Lil Dev finds a doorway to somewhere no one's ever been? You decide how the story goes.</p>
+          <div class="adv-status"><span class="sdot"></span><span>Coming Soon</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:4rem;">
+      <span class="sec-label">🔭 On the Horizon</span>
+      <h3 style="font-family:'Fredoka',sans-serif;font-size:1.6rem;font-weight:700;color:var(--white);margin-bottom:0.5rem;">More Adventures Are Being Written</h3>
+      <p style="color:rgba(255,255,255,0.6);font-family:'Inter',sans-serif;font-size:0.95rem;margin-bottom:1.5rem;">The universe is expanding. These story arcs are already taking shape.</p>
+      <div class="coming-soon-grid">
+        <div class="cs-card"><span class="cs-icon">⛈️</span><div class="cs-name">The Storm Story</div></div>
+        <div class="cs-card"><span class="cs-icon">🎵</span><div class="cs-name">The Music Adventure</div></div>
+        <div class="cs-card"><span class="cs-icon">🌱</span><div class="cs-name">The Garden Project</div></div>
+        <div class="cs-card"><span class="cs-icon">💻</span><div class="cs-name">The Code Mission</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="cta-band">
+  <h2>Don't Miss What Comes Next.</h2>
+  <p>New adventures, new stories, new drops. Join the world and be the first to know.</p>
+  <div class="cta-row">
+    <a href="/newsletter/" class="btn-dk">Join the World</a>
+    <a href="/meet-lil-dev/" class="btn-dk" style="background:rgba(0,0,0,0.15);color:var(--dark);">Meet Lil Dev →</a>
+  </div>
+</section>
+<footer class="footer">
+  <div class="footer-grid">
+    <div><img class="footer-logo" src="/assets/images/lildev-logo-cropped.png" alt="Lil Dev World logo"><p class="footer-tag">Enriching young minds through adventure and curiosity.<br>The world is always growing.</p><div class="footer-social"><a href="https://instagram.com/lildevworld" target="_blank" rel="noopener" aria-label="Instagram">📸</a><a href="https://youtube.com/@lildevworld" target="_blank" rel="noopener" aria-label="YouTube">▶️</a><a href="https://tiktok.com/@lildevworld" target="_blank" rel="noopener" aria-label="TikTok">🎵</a></div></div>
+    <div class="footer-col"><div class="footer-col-title">The World</div><ul><li><a href="/the-world/">The World</a></li><li><a href="/meet-lil-dev/">Meet Lil Dev</a></li><li><a href="/characters/">Characters</a></li><li><a href="/angel/">Angel</a></li><li><a href="/origin-story/">Origin Story</a></li></ul></div>
+    <div class="footer-col"><div class="footer-col-title">Explore</div><ul><li><a href="/adventures/">Adventures</a></li><li><a href="/learn/">Learn Lab</a></li><li><a href="/games/">Games</a></li><li><a href="/updates/">Updates</a></li></ul></div>
+    <div class="footer-col"><div class="footer-col-title">Connect</div><ul><li><a href="/parents/">For Parents</a></li><li><a href="/newsletter/">Newsletter</a></li><li><a href="https://lildev.store" target="_blank" rel="noopener">LilDev Store</a></li><li><a href="https://jdproductions.io" target="_blank" rel="noopener">JD Productions</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><p>© 2026 Lil Dev World. All rights reserved.</p><a href="https://jdproductions.io" target="_blank" rel="noopener">A JD Productions property</a></div>
+</footer>
+<script>
+  // Stars
+  const sc=document.getElementById('hStars');
+  for(let i=0;i<40;i++){const s=document.createElement('div');s.className='hstar';const sz=Math.random()*2.5+1;s.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;animation-delay:'+Math.random()*4+'s;animation-duration:'+(2+Math.random()*3)+'s;';sc.appendChild(s);}
+  // Nav
+  const nav=document.getElementById('mainNav'),nl=document.getElementById('navLinks'),na=document.getElementById('navArrow');
+  nav.addEventListener('click',function(e){if(window.innerWidth>768)return;if(e.target.closest('.nav-links a'))return;e.preventDefault();const o=nl.classList.toggle('open');na.classList.toggle('open',o);na.textContent=o?'▼ CLOSE':'▼ MENU';});
+</script>
+</body>
+</html>

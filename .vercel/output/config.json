@@ -1,0 +1,114 @@
+{
+  "version": 3,
+  "routes": [
+    {
+      "src": "^/(?:(.+)/)?index(?:\\.html)?/?$",
+      "headers": {
+        "Location": "/$1"
+      },
+      "status": 308
+    },
+    {
+      "src": "^/(.*)\\.html/?$",
+      "headers": {
+        "Location": "/$1"
+      },
+      "status": 308
+    },
+    {
+      "src": "^/(.*)/$",
+      "headers": {
+        "Location": "/$1"
+      },
+      "status": 308
+    },
+    {
+      "src": "^(?:/(.*))$",
+      "headers": {
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
+        "X-XSS-Protection": "1; mode=block",
+        "Referrer-Policy": "strict-origin-when-cross-origin"
+      },
+      "continue": true
+    },
+    {
+      "src": "^/assets(?:/(.*))$",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      },
+      "continue": true
+    },
+    {
+      "handle": "error"
+    },
+    {
+      "status": 404,
+      "src": "^(?!/api).*$",
+      "dest": "/404"
+    }
+  ],
+  "overrides": {
+    "adventures/hidden-world/index.html": {
+      "path": "adventures/hidden-world/index"
+    },
+    "adventures/kitchen-discovery/index.html": {
+      "path": "adventures/kitchen-discovery/index"
+    },
+    "adventures/night-at-the-court/index.html": {
+      "path": "adventures/night-at-the-court/index"
+    },
+    "_experiments/lildev-v1.html": {
+      "path": "_experiments/lildev-v1"
+    },
+    "_experiments/lildev-v2.html": {
+      "path": "_experiments/lildev-v2"
+    },
+    "_experiments/lildev-v3.html": {
+      "path": "_experiments/lildev-v3"
+    },
+    "adventures/index.html": {
+      "path": "adventures/index"
+    },
+    "angel/index.html": {
+      "path": "angel/index"
+    },
+    "characters/index.html": {
+      "path": "characters/index"
+    },
+    "games/index.html": {
+      "path": "games/index"
+    },
+    "learn/index.html": {
+      "path": "learn/index"
+    },
+    "meet-lil-dev/index.html": {
+      "path": "meet-lil-dev/index"
+    },
+    "newsletter/index.html": {
+      "path": "newsletter/index"
+    },
+    "origin-story/index.html": {
+      "path": "origin-story/index"
+    },
+    "parents/index.html": {
+      "path": "parents/index"
+    },
+    "press/index.html": {
+      "path": "press/index"
+    },
+    "the-world/index.html": {
+      "path": "the-world/index"
+    },
+    "updates/index.html": {
+      "path": "updates/index"
+    },
+    "index.html": {
+      "path": "index"
+    },
+    "world.html": {
+      "path": "world"
+    }
+  },
+  "crons": []
+}

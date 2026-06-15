@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#7B3FF2">
+  <title>Games — Play in the World of Lil Dev | Lil Dev World</title>
+  <meta name="description" content="Games are coming to Lil Dev World. Memory Match, Find Angel, and more — interactive adventures for curious kids. Be the first to play.">
+  <link rel="canonical" href="https://lildev.world/games/">
+  <meta property="og:title" content="Games — Lil Dev World">
+  <meta property="og:description" content="Interactive games set in the world of Lil Dev — coming soon. Join the newsletter to be the first to play.">
+  <meta property="og:url" content="https://lildev.world/games/">
+  <meta property="og:image" content="https://lildev.world/assets/images/og-cover.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://lildev.world/assets/images/og-cover.jpg">
+  <link rel="icon" href="/assets/images/lildev-logo-cropped.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Lil Dev World","item":"https://lildev.world/"},{"@type":"ListItem","position":2,"name":"Games","item":"https://lildev.world/games/"}]}</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --blue:#3B64B6;--blue-lt:#5B8AD6;--blue-dk:#2A4A8A;--yellow:#FFC400;--yellow-lt:#FFD84D;--purple:#7B3FF2;--red:#FF3B30;--green:#34C759;--orange:#FF9500;--dark:#1A2340;--white:#FFFFFF; }
+    html { scroll-behavior: smooth; }
+    body { font-family:'Inter',sans-serif; color:var(--dark); background:var(--white); overflow-x:hidden; }
+    .nav { position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;height:64px;overflow:hidden;padding:0 2rem;background:rgba(42,74,138,0.97);backdrop-filter:blur(14px);box-shadow:0 2px 24px rgba(0,0,0,0.2); }
+    .nav-brand { display:flex;align-items:center;text-decoration:none;flex-shrink:0; }
+    .nav-logo { height:52px;width:auto; }
+    .nav-links { display:flex;gap:0.2rem;list-style:none; }
+    .nav-links a { font-family:'Nunito',sans-serif;font-weight:700;font-size:0.85rem;color:rgba(255,255,255,0.88);text-decoration:none;padding:0.38rem 0.75rem;border-radius:999px;transition:all 0.2s; }
+    .nav-links a:hover { background:rgba(255,196,0,0.18);color:var(--yellow); }
+    .nav-links a[aria-current="page"] { background:rgba(255,196,0,0.18);color:var(--yellow); }
+    .nav-cta { background:var(--yellow)!important;color:var(--dark)!important;font-weight:900!important; }
+    .nav-arrow { display:none; }
+    .page-hero { min-height:50vh;display:flex;align-items:flex-end;justify-content:center;padding:7rem 2rem 4rem;text-align:center;position:relative;overflow:hidden;background:linear-gradient(160deg,#0D0D24 0%,#1A0D40 40%,#3A1A80 100%); }
+    .page-hero::before { content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 50% 100%,rgba(123,63,242,0.3),transparent); }
+    .hero-stars { position:absolute;inset:0;z-index:0; }
+    .page-hero-content { position:relative;z-index:2;max-width:700px; }
+    .page-tag { display:inline-block;background:var(--purple);color:var(--white);font-family:'Nunito',sans-serif;font-weight:900;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.3rem 1rem;border-radius:999px;margin-bottom:1.2rem; }
+    .page-h1 { font-family:'Fredoka',sans-serif;font-size:clamp(2.4rem,7vw,4.2rem);font-weight:700;color:var(--white);line-height:1.08;margin-bottom:0.8rem;text-shadow:0 4px 24px rgba(0,0,0,0.3); }
+    .page-sub { font-family:'Nunito',sans-serif;font-size:clamp(1rem,2.5vw,1.2rem);font-weight:700;color:rgba(255,255,255,0.82); }
+    .sec { padding:5rem 1.5rem; }
+    .wrap { max-width:1100px;margin:0 auto; }
+    .sec-label { display:block;font-family:'Nunito',sans-serif;font-weight:900;font-size:0.78rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--blue);margin-bottom:0.4rem;text-align:center; }
+    .sec-title { font-family:'Fredoka',sans-serif;font-size:clamp(1.8rem,4vw,2.6rem);font-weight:700;color:var(--dark);margin-bottom:0.5rem;text-align:center; }
+    .sec-desc { font-family:'Nunito',sans-serif;font-size:1.05rem;font-weight:600;color:#667;max-width:600px;margin:0 auto 3.5rem;line-height:1.7;text-align:center; }
+    p { font-family:'Inter',sans-serif;font-size:1rem;line-height:1.75;color:#445;margin-bottom:1.2rem; }
+    .games-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-bottom:4rem; }
+    .game-card { border-radius:2rem;overflow:hidden;background:#F8F5FF;border:2.5px solid #E8DDFF;transition:transform 0.25s,box-shadow 0.25s;position:relative; }
+    .game-card:hover { transform:translateY(-4px);box-shadow:0 16px 48px rgba(123,63,242,0.12); }
+    .game-card-art { height:180px;display:flex;align-items:center;justify-content:center;font-size:5rem;position:relative; }
+    .game-badge { position:absolute;top:1rem;right:1rem;background:var(--purple);color:var(--white);font-family:'Nunito',sans-serif;font-weight:900;font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.22rem 0.7rem;border-radius:999px; }
+    .game-body { padding:1.4rem 1.6rem 1.8rem; }
+    .game-title { font-family:'Fredoka',sans-serif;font-size:1.3rem;font-weight:700;color:var(--dark);margin-bottom:0.3rem; }
+    .game-type { font-family:'Nunito',sans-serif;font-weight:800;font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--purple);margin-bottom:0.6rem; }
+    .game-desc { font-family:'Inter',sans-serif;font-size:0.88rem;line-height:1.65;color:#667; }
+    .notify-box { background:linear-gradient(135deg,#1A0D40,#3A1A80);border-radius:2.5rem;padding:4rem 2.5rem;text-align:center;max-width:680px;margin:0 auto; }
+    .notify-box h2 { font-family:'Fredoka',sans-serif;font-size:clamp(1.6rem,4vw,2.4rem);font-weight:700;color:var(--white);margin-bottom:0.5rem; }
+    .notify-box p { font-family:'Nunito',sans-serif;font-weight:700;color:rgba(255,255,255,0.7);margin-bottom:1.8rem;line-height:1.6; }
+    .notify-form { display:flex;gap:0.75rem;max-width:440px;margin:0 auto; }
+    .notify-input { flex:1;padding:0.85rem 1.2rem;border-radius:999px;border:2.5px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.08);color:var(--white);font-family:'Nunito',sans-serif;font-size:1rem;font-weight:600;outline:none; }
+    .notify-input::placeholder { color:rgba(255,255,255,0.35); }
+    .notify-input:focus { border-color:var(--purple);background:rgba(255,255,255,0.12); }
+    .notify-btn { background:var(--yellow);color:var(--dark);font-family:'Fredoka',sans-serif;font-weight:700;font-size:1rem;padding:0.85rem 1.5rem;border-radius:999px;border:none;cursor:pointer;white-space:nowrap;transition:all 0.2s; }
+    .notify-btn:hover { transform:scale(1.05); }
+    .btn-primary { display:inline-block;background:var(--blue);color:var(--white);font-family:'Fredoka',sans-serif;font-size:1.1rem;font-weight:700;padding:0.75rem 1.8rem;border-radius:999px;text-decoration:none;transition:all 0.2s; }
+    .btn-primary:hover { background:var(--blue-dk);transform:translateY(-2px); }
+    .cta-band { background:var(--yellow);padding:4rem 1.5rem;text-align:center; }
+    .cta-band h2 { font-family:'Fredoka',sans-serif;font-size:clamp(1.8rem,5vw,2.8rem);font-weight:700;color:var(--dark);margin-bottom:0.5rem; }
+    .cta-band p { font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;color:rgba(34,34,34,0.7);margin-bottom:1.8rem; }
+    .cta-row { display:flex;gap:1rem;justify-content:center;flex-wrap:wrap; }
+    .footer { background:#06101E;color:rgba(255,255,255,0.65);padding:3rem 1.5rem; }
+    .footer-grid { max-width:1120px;margin:0 auto;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:2rem; }
+    .footer-logo { height:72px;width:auto;margin-bottom:0.8rem; }
+    .footer-tag { font-family:'Nunito',sans-serif;font-size:0.88rem;color:rgba(255,255,255,0.5);line-height:1.65;margin-bottom:1.2rem; }
+    .footer-social { display:flex;gap:0.65rem; }
+    .footer-social a { width:36px;height:36px;background:rgba(255,255,255,0.07);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.95rem;text-decoration:none;transition:background 0.2s,transform 0.2s; }
+    .footer-social a:hover { background:var(--yellow);transform:translateY(-2px); }
+    .footer-col-title { font-family:'Nunito',sans-serif;font-weight:900;font-size:0.76rem;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.35);margin-bottom:1rem; }
+    .footer-col ul { list-style:none;display:flex;flex-direction:column;gap:0.5rem; }
+    .footer-col a { font-family:'Inter',sans-serif;font-size:0.88rem;color:rgba(255,255,255,0.58);text-decoration:none;transition:color 0.2s; }
+    .footer-col a:hover { color:var(--yellow); }
+    .footer-bottom { max-width:1120px;margin:2rem auto 0;padding-top:1.4rem;border-top:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem; }
+    .footer-bottom p,.footer-bottom a { font-family:'Inter',sans-serif;font-size:0.78rem;color:rgba(255,255,255,0.3);text-decoration:none; }
+    .footer-bottom a:hover { color:rgba(255,196,0,0.7); }
+    @media(max-width:768px){.nav{flex-direction:column;height:auto;overflow:hidden;padding:0.55rem 1.2rem 0;align-items:center;justify-content:flex-start;cursor:pointer;}.nav-brand{justify-content:center;width:100%;padding-bottom:0.4rem;}.nav-logo{height:80px;}.nav-arrow{display:block;font-family:'Nunito',sans-serif;font-weight:900;font-size:0.72rem;color:var(--yellow);margin-bottom:0.4rem;letter-spacing:0.08em;transition:transform 0.3s;pointer-events:none;}.nav-arrow.open{transform:rotate(180deg);}.nav-links{display:flex!important;flex-direction:column;width:100%;max-height:0;overflow:hidden;transition:max-height 0.35s;gap:0;padding:0;border-top:1px solid transparent;}.nav-links.open{max-height:420px;border-top-color:rgba(255,255,255,0.1);padding:0.5rem 0 0.7rem;}.nav-links li{width:100%;}.nav-links a{display:block;text-align:center;padding:0.65rem 1rem;font-size:1rem;border-radius:0.6rem;}.games-grid{grid-template-columns:1fr;}.notify-form{flex-direction:column;}.footer-grid{grid-template-columns:1fr;gap:1.5rem;}.footer-bottom{justify-content:center;text-align:center;}}
+  </style>
+</head>
+<body>
+<nav class="nav" id="mainNav">
+  <a href="/" class="nav-brand" aria-label="Lil Dev World home">
+    <img class="nav-logo" src="/assets/images/lildev-logo-cropped.png" alt="Lil Dev World logo">
+  </a>
+  <div class="nav-arrow" id="navArrow" aria-hidden="true">▼ MENU</div>
+  <ul class="nav-links" id="navLinks" role="list">
+    <li><a href="/the-world/">The World</a></li>
+    <li><a href="/meet-lil-dev/">Meet Lil Dev</a></li>
+    <li><a href="/adventures/">Adventures</a></li>
+    <li><a href="/characters/">Characters</a></li>
+    <li><a href="/learn/">Learn Lab</a></li>
+    <li><a href="/games/" aria-current="page">Games</a></li>
+    <li><a href="/parents/">Parents</a></li>
+    <li><a href="/newsletter/" class="nav-cta">Join the World!</a></li>
+  </ul>
+</nav>
+
+<header class="page-hero">
+  <canvas class="hero-stars" id="starCanvas"></canvas>
+  <div class="page-hero-content">
+    <span class="page-tag">🎮 Play Is Learning</span>
+    <h1 class="page-h1">Games</h1>
+    <p class="page-sub">The first wave is on its way. Ready yourself.</p>
+  </div>
+</header>
+
+<section class="sec">
+  <div class="wrap">
+    <span class="sec-label">First Wave</span>
+    <h2 class="sec-title">Games in Development</h2>
+    <p class="sec-desc">Each game is a window into the world of Lil Dev. Play, explore, discover.</p>
+    <div class="games-grid">
+      <div class="game-card">
+        <div class="game-card-art" style="background:linear-gradient(135deg,#EBF3FF,#C8DAFF);">🃏<span class="game-badge">Coming Soon</span></div>
+        <div class="game-body">
+          <div class="game-title">Memory Match</div>
+          <div class="game-type">Puzzle · Memory</div>
+          <p class="game-desc">Flip the cards. Find the pairs. A classic memory game played with characters, places, and objects from Lil Dev's world.</p>
+        </div>
+      </div>
+      <div class="game-card">
+        <div class="game-card-art" style="background:linear-gradient(135deg,#FFF8E8,#FFE8A0);">🐕<span class="game-badge">Coming Soon</span></div>
+        <div class="game-body">
+          <div class="game-title">Find Angel</div>
+          <div class="game-type">Hidden Object · Adventure</div>
+          <p class="game-desc">Angel is hiding somewhere in the world. Search through scenes from the adventure universe and find him before time runs out.</p>
+        </div>
+      </div>
+      <div class="game-card">
+        <div class="game-card-art" style="background:linear-gradient(135deg,#F0FFF4,#C3F5D4);">🔬<span class="game-badge">Coming Soon</span></div>
+        <div class="game-body">
+          <div class="game-title">Lab Puzzle</div>
+          <div class="game-type">Logic · STEAM</div>
+          <p class="game-desc">Lil Dev's experiment went sideways. Help him figure out what went wrong by solving logic puzzles in his discovery lab.</p>
+        </div>
+      </div>
+      <div class="game-card">
+        <div class="game-card-art" style="background:linear-gradient(135deg,#FFF0F5,#FFD0E0);">🎨<span class="game-badge">Coming Soon</span></div>
+        <div class="game-body">
+          <div class="game-title">World Builder</div>
+          <div class="game-type">Creative · Open Play</div>
+          <p class="game-desc">Design your own corner of Lil Dev's world. Place characters, objects, and scenes to build a story that's all yours.</p>
+        </div>
+      </div>
+      <div class="game-card">
+        <div class="game-card-art" style="background:linear-gradient(135deg,#F5F0FF,#E0D0FF);">⭐<span class="game-badge">Coming Soon</span></div>
+        <div class="game-body">
+          <div class="game-title">Star Collector</div>
+          <div class="game-type">Arcade · Discovery</div>
+          <p class="game-desc">Navigate through the cosmos of discovered-space — catching stars, avoiding obstacles, and unlocking new parts of the universe.</p>
+        </div>
+      </div>
+      <div class="game-card">
+        <div class="game-card-art" style="background:linear-gradient(135deg,#FFF5EB,#FFD8A0);">🏀<span class="game-badge">Coming Soon</span></div>
+        <div class="game-body">
+          <div class="game-title">Court Challenge</div>
+          <div class="game-type">Sports · Skill</div>
+          <p class="game-desc">It's midnight at the court. Lil Dev's got the ball. A timing and precision game set in one of the most iconic places in the world.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="notify-box">
+      <h2>Be the First to Play</h2>
+      <p>Drop your email and we'll tell you the moment the first game goes live. No spam. Just the signal.</p>
+      <form class="notify-form" onsubmit="handleNotify(event)">
+        <input class="notify-input" type="email" placeholder="Your email" required aria-label="Email address">
+        <button class="notify-btn" type="submit">Notify Me</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <h2>The World Doesn't Stop Here.</h2>
+  <p>Explore everything else while you wait.</p>
+  <div class="cta-row">
+    <a href="/adventures/" class="btn-primary" style="background:var(--dark);">See Adventures</a>
+    <a href="/learn/" class="btn-primary" style="background:rgba(0,0,0,0.15);color:var(--dark);">Visit the Learn Lab →</a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div>
+      <img class="footer-logo" src="/assets/images/lildev-logo-cropped.png" alt="Lil Dev World logo">
+      <p class="footer-tag">Enriching young minds through adventure and curiosity.<br>The world is always growing.</p>
+      <div class="footer-social">
+        <a href="https://instagram.com/lildevworld" target="_blank" rel="noopener" aria-label="Instagram">📸</a>
+        <a href="https://youtube.com/@lildevworld" target="_blank" rel="noopener" aria-label="YouTube">▶️</a>
+        <a href="https://tiktok.com/@lildevworld" target="_blank" rel="noopener" aria-label="TikTok">🎵</a>
+      </div>
+    </div>
+    <div class="footer-col"><div class="footer-col-title">The World</div><ul><li><a href="/the-world/">The World</a></li><li><a href="/meet-lil-dev/">Meet Lil Dev</a></li><li><a href="/characters/">Characters</a></li><li><a href="/angel/">Angel</a></li><li><a href="/origin-story/">Origin Story</a></li></ul></div>
+    <div class="footer-col"><div class="footer-col-title">Explore</div><ul><li><a href="/adventures/">Adventures</a></li><li><a href="/learn/">Learn Lab</a></li><li><a href="/games/">Games</a></li><li><a href="/updates/">Updates</a></li></ul></div>
+    <div class="footer-col"><div class="footer-col-title">Connect</div><ul><li><a href="/parents/">For Parents</a></li><li><a href="/newsletter/">Newsletter</a></li><li><a href="https://lildev.store" target="_blank" rel="noopener">LilDev Store</a></li><li><a href="https://jdproductions.io" target="_blank" rel="noopener">JD Productions</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Lil Dev World. All rights reserved.</p>
+    <a href="https://jdproductions.io" target="_blank" rel="noopener">A JD Productions property</a>
+  </div>
+</footer>
+<script>
+  function handleNotify(e){e.preventDefault();const btn=e.target.querySelector('.notify-btn');btn.textContent='You\'re on the list!';btn.style.background='var(--green)';btn.style.color='var(--white)';e.target.querySelector('.notify-input').disabled=true;btn.disabled=true;}
+  const cvs=document.getElementById('starCanvas');if(cvs){const ctx=cvs.getContext('2d');function resize(){cvs.width=cvs.offsetWidth;cvs.height=cvs.offsetHeight;}resize();window.addEventListener('resize',resize);const stars=Array.from({length:120},()=>({x:Math.random(),y:Math.random(),r:Math.random()*1.5+0.3,a:Math.random(),da:0.003+Math.random()*0.007}));function draw(){ctx.clearRect(0,0,cvs.width,cvs.height);stars.forEach(s=>{s.a+=s.da;if(s.a>1||s.a<0)s.da*=-1;ctx.globalAlpha=s.a*0.8;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(s.x*cvs.width,s.y*cvs.height,s.r,0,Math.PI*2);ctx.fill();});ctx.globalAlpha=1;requestAnimationFrame(draw);}draw();}
+  const nav=document.getElementById('mainNav'),navLinks=document.getElementById('navLinks'),navArrow=document.getElementById('navArrow');
+  nav.addEventListener('click',function(e){if(window.innerWidth>768)return;if(e.target.closest('.nav-links a')||e.target.closest('form'))return;e.preventDefault();const o=navLinks.classList.toggle('open');navArrow.classList.toggle('open',o);navArrow.textContent=o?'▼ CLOSE':'▼ MENU';});
+</script>
+</body>
+</html>

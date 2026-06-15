@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#3B64B6">
+  <title>Characters — Meet the Cast of Lil Dev World | Lil Dev World</title>
+  <meta name="description" content="Meet Lil Dev, Angel, and the growing cast of characters that make up the Lil Dev World universe. Every character has a story.">
+  <link rel="canonical" href="https://lildev.world/characters/">
+  <meta property="og:title" content="Characters — Lil Dev World">
+  <meta property="og:description" content="Meet Lil Dev, Angel, and the growing cast of characters that make up the Lil Dev World universe.">
+  <meta property="og:url" content="https://lildev.world/characters/">
+  <meta property="og:image" content="https://lildev.world/assets/images/og-cover.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://lildev.world/assets/images/og-cover.jpg">
+  <link rel="icon" href="/assets/images/lildev-logo-cropped.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","@id":"https://lildev.world/characters/#roster","name":"Lil Dev World Characters","description":"The growing cast of characters in the Lil Dev World universe.","url":"https://lildev.world/characters/","numberOfItems":2,"itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"Person","@id":"https://lildev.world/meet-lil-dev/#character","name":"Lil Dev","url":"https://lildev.world/meet-lil-dev/","image":"https://lildev.world/assets/images/devin-excited.webp","description":"The curious, creative kid at the center of every adventure."}},{"@type":"ListItem","position":2,"item":{"@type":"Person","@id":"https://lildev.world/angel/#character","name":"Angel","url":"https://lildev.world/angel/","image":"https://lildev.world/assets/images/angel-trotting.webp","description":"Lil Dev's loyal dog companion — always alert, always by his side."}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Lil Dev World","item":"https://lildev.world/"},{"@type":"ListItem","position":2,"name":"Characters","item":"https://lildev.world/characters/"}]}</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --blue:#3B64B6;--blue-lt:#5B8AD6;--blue-dk:#2A4A8A;--yellow:#FFC400;--yellow-lt:#FFD84D;--purple:#7B3FF2;--red:#FF3B30;--green:#34C759;--orange:#FF9500;--dark:#1A2340;--white:#FFFFFF; }
+    html { scroll-behavior: smooth; }
+    body { font-family:'Inter',sans-serif; color:var(--dark); background:var(--white); overflow-x:hidden; }
+    .nav { position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;height:64px;overflow:hidden;padding:0 2rem;background:rgba(42,74,138,0.97);backdrop-filter:blur(14px);box-shadow:0 2px 24px rgba(0,0,0,0.2); }
+    .nav-brand { display:flex;align-items:center;text-decoration:none;flex-shrink:0; }
+    .nav-logo { height:52px;width:auto; }
+    .nav-links { display:flex;gap:0.2rem;list-style:none; }
+    .nav-links a { font-family:'Nunito',sans-serif;font-weight:700;font-size:0.85rem;color:rgba(255,255,255,0.88);text-decoration:none;padding:0.38rem 0.75rem;border-radius:999px;transition:all 0.2s; }
+    .nav-links a:hover { background:rgba(255,196,0,0.18);color:var(--yellow); }
+    .nav-links a[aria-current="page"] { background:rgba(255,196,0,0.18);color:var(--yellow); }
+    .nav-cta { background:var(--yellow)!important;color:var(--dark)!important;font-weight:900!important; }
+    .nav-arrow { display:none; }
+    .page-hero { min-height:46vh;display:flex;align-items:flex-end;justify-content:center;padding:7rem 2rem 4rem;text-align:center;position:relative;overflow:hidden;background:linear-gradient(160deg,#1A2340 0%,#2A4A8A 55%,#3B64B6 100%); }
+    .page-hero-content { position:relative;z-index:2;max-width:700px; }
+    .page-tag { display:inline-block;background:var(--yellow);color:var(--dark);font-family:'Nunito',sans-serif;font-weight:900;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.3rem 1rem;border-radius:999px;margin-bottom:1.2rem; }
+    .page-h1 { font-family:'Fredoka',sans-serif;font-size:clamp(2.4rem,7vw,4.2rem);font-weight:700;color:var(--white);line-height:1.08;margin-bottom:0.8rem;text-shadow:0 4px 24px rgba(0,0,0,0.3); }
+    .page-sub { font-family:'Nunito',sans-serif;font-size:clamp(1rem,2.5vw,1.2rem);font-weight:700;color:rgba(255,255,255,0.82); }
+    .sec { padding:5rem 1.5rem; }
+    .wrap { max-width:1100px;margin:0 auto; }
+    .sec-label { display:block;font-family:'Nunito',sans-serif;font-weight:900;font-size:0.78rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--blue);margin-bottom:0.4rem; }
+    .sec-title { font-family:'Fredoka',sans-serif;font-size:clamp(1.8rem,4vw,2.6rem);font-weight:700;color:var(--dark);margin-bottom:0.5rem;text-align:center; }
+    .sec-desc { font-family:'Nunito',sans-serif;font-size:1.05rem;font-weight:600;color:#667;text-align:center;max-width:600px;margin:0 auto 3.5rem;line-height:1.7; }
+    p { font-family:'Inter',sans-serif;font-size:1rem;line-height:1.75;color:#445;margin-bottom:1.2rem; }
+    .char-grid { display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;margin-bottom:4rem; }
+    .char-card { background:var(--white);border-radius:2rem;overflow:hidden;box-shadow:0 8px 40px rgba(59,100,182,0.1);transition:transform 0.25s,box-shadow 0.25s;display:flex;flex-direction:column; }
+    .char-card:hover { transform:translateY(-6px);box-shadow:0 20px 60px rgba(59,100,182,0.18); }
+    .char-card-img { position:relative;background:linear-gradient(160deg,#EBF3FF,#D8E8FF);padding:2.5rem 2rem 1rem;display:flex;justify-content:center;align-items:flex-end;min-height:320px; }
+    .char-card-img img { height:260px;width:auto;object-fit:contain;filter:drop-shadow(0 12px 30px rgba(0,0,0,0.18));transition:transform 0.3s; }
+    .char-card:hover .char-card-img img { transform:scale(1.05) translateY(-4px); }
+    .char-card-badge { position:absolute;top:1.2rem;right:1.2rem;background:var(--yellow);color:var(--dark);font-family:'Nunito',sans-serif;font-weight:900;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.25rem 0.8rem;border-radius:999px; }
+    .char-card-body { padding:1.8rem 2rem 2rem;flex:1;display:flex;flex-direction:column; }
+    .char-name { font-family:'Fredoka',sans-serif;font-size:1.9rem;font-weight:700;color:var(--dark);margin-bottom:0.3rem; }
+    .char-role { font-family:'Nunito',sans-serif;font-weight:800;font-size:0.82rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--blue);margin-bottom:0.9rem; }
+    .char-desc { font-family:'Inter',sans-serif;font-size:0.95rem;line-height:1.7;color:#556;flex:1;margin-bottom:1.5rem; }
+    .char-traits { display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1.6rem; }
+    .char-trait { background:#EBF3FF;border-radius:999px;padding:0.25rem 0.75rem;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.78rem;color:var(--blue); }
+    .btn-outline { display:inline-block;border:2.5px solid var(--blue);color:var(--blue);font-family:'Fredoka',sans-serif;font-size:1rem;font-weight:700;padding:0.6rem 1.5rem;border-radius:999px;text-decoration:none;transition:all 0.2s; }
+    .btn-outline:hover { background:var(--blue);color:var(--white);transform:translateY(-2px); }
+    .btn-primary { display:inline-block;background:var(--blue);color:var(--white);font-family:'Fredoka',sans-serif;font-size:1.1rem;font-weight:700;padding:0.75rem 1.8rem;border-radius:999px;text-decoration:none;transition:all 0.2s; }
+    .btn-primary:hover { background:var(--blue-dk);transform:translateY(-2px); }
+    .coming-section { background:linear-gradient(135deg,#1A2340 0%,#2A4A8A 100%);border-radius:2.5rem;padding:3.5rem 2.5rem;text-align:center; }
+    .coming-section h2 { font-family:'Fredoka',sans-serif;font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:700;color:var(--white);margin-bottom:0.6rem; }
+    .coming-section p { font-family:'Nunito',sans-serif;font-weight:700;color:rgba(255,255,255,0.7);margin-bottom:2rem;max-width:500px;margin-left:auto;margin-right:auto; }
+    .mystery-row { display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap; }
+    .mystery-card { width:120px;height:160px;background:rgba(255,255,255,0.05);border:2px dashed rgba(255,255,255,0.15);border-radius:1.5rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.5rem; }
+    .mystery-ico { font-size:2rem;opacity:0.4; }
+    .mystery-lbl { font-family:'Nunito',sans-serif;font-weight:800;font-size:0.7rem;color:rgba(255,255,255,0.3);letter-spacing:0.08em;text-transform:uppercase; }
+    .cta-band { background:var(--yellow);padding:4rem 1.5rem;text-align:center; }
+    .cta-band h2 { font-family:'Fredoka',sans-serif;font-size:clamp(1.8rem,5vw,2.8rem);font-weight:700;color:var(--dark);margin-bottom:0.5rem; }
+    .cta-band p { font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;color:rgba(34,34,34,0.7);margin-bottom:1.8rem; }
+    .cta-row { display:flex;gap:1rem;justify-content:center;flex-wrap:wrap; }
+    .footer { background:#06101E;color:rgba(255,255,255,0.65);padding:3rem 1.5rem; }
+    .footer-grid { max-width:1120px;margin:0 auto;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:2rem; }
+    .footer-logo { height:72px;width:auto;margin-bottom:0.8rem; }
+    .footer-tag { font-family:'Nunito',sans-serif;font-size:0.88rem;color:rgba(255,255,255,0.5);line-height:1.65;margin-bottom:1.2rem; }
+    .footer-social { display:flex;gap:0.65rem; }
+    .footer-social a { width:36px;height:36px;background:rgba(255,255,255,0.07);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.95rem;text-decoration:none;transition:background 0.2s,transform 0.2s; }
+    .footer-social a:hover { background:var(--yellow);transform:translateY(-2px); }
+    .footer-col-title { font-family:'Nunito',sans-serif;font-weight:900;font-size:0.76rem;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.35);margin-bottom:1rem; }
+    .footer-col ul { list-style:none;display:flex;flex-direction:column;gap:0.5rem; }
+    .footer-col a { font-family:'Inter',sans-serif;font-size:0.88rem;color:rgba(255,255,255,0.58);text-decoration:none;transition:color 0.2s; }
+    .footer-col a:hover { color:var(--yellow); }
+    .footer-bottom { max-width:1120px;margin:2rem auto 0;padding-top:1.4rem;border-top:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem; }
+    .footer-bottom p,.footer-bottom a { font-family:'Inter',sans-serif;font-size:0.78rem;color:rgba(255,255,255,0.3);text-decoration:none; }
+    .footer-bottom a:hover { color:rgba(255,196,0,0.7); }
+    @media(max-width:768px){.nav{flex-direction:column;height:auto;overflow:hidden;padding:0.55rem 1.2rem 0;align-items:center;justify-content:flex-start;cursor:pointer;}.nav-brand{justify-content:center;width:100%;padding-bottom:0.4rem;}.nav-logo{height:80px;}.nav-arrow{display:block;font-family:'Nunito',sans-serif;font-weight:900;font-size:0.72rem;color:var(--yellow);margin-bottom:0.4rem;letter-spacing:0.08em;transition:transform 0.3s;pointer-events:none;}.nav-arrow.open{transform:rotate(180deg);}.nav-links{display:flex!important;flex-direction:column;width:100%;max-height:0;overflow:hidden;transition:max-height 0.35s;gap:0;padding:0;border-top:1px solid transparent;}.nav-links.open{max-height:420px;border-top-color:rgba(255,255,255,0.1);padding:0.5rem 0 0.7rem;}.nav-links li{width:100%;}.nav-links a{display:block;text-align:center;padding:0.65rem 1rem;font-size:1rem;border-radius:0.6rem;}.char-grid{grid-template-columns:1fr;}.footer-grid{grid-template-columns:1fr;gap:1.5rem;}.footer-bottom{justify-content:center;text-align:center;}}
+  </style>
+</head>
+<body>
+<nav class="nav" id="mainNav">
+  <a href="/" class="nav-brand" aria-label="Lil Dev World home">
+    <img class="nav-logo" src="/assets/images/lildev-logo-cropped.png" alt="Lil Dev World logo">
+  </a>
+  <div class="nav-arrow" id="navArrow" aria-hidden="true">▼ MENU</div>
+  <ul class="nav-links" id="navLinks" role="list">
+    <li><a href="/the-world/">The World</a></li>
+    <li><a href="/meet-lil-dev/">Meet Lil Dev</a></li>
+    <li><a href="/adventures/">Adventures</a></li>
+    <li><a href="/characters/" aria-current="page">Characters</a></li>
+    <li><a href="/learn/">Learn Lab</a></li>
+    <li><a href="/games/">Games</a></li>
+    <li><a href="/parents/">Parents</a></li>
+    <li><a href="/newsletter/" class="nav-cta">Join the World!</a></li>
+  </ul>
+</nav>
+
+<header class="page-hero">
+  <div class="page-hero-content">
+    <span class="page-tag">🌟 The Cast</span>
+    <h1 class="page-h1">Meet the Characters</h1>
+    <p class="page-sub">Every world needs its people. This one is just getting started.</p>
+  </div>
+</header>
+
+<section class="sec">
+  <div class="wrap">
+    <span class="sec-label" style="display:block;text-align:center;">The Roster</span>
+    <h2 class="sec-title">Characters of Lil Dev World</h2>
+    <p class="sec-desc">Two characters. A growing universe. Every adventure adds another layer to who they are.</p>
+
+    <div class="char-grid">
+      <div class="char-card">
+        <div class="char-card-img">
+          <span class="char-card-badge">Main Character</span>
+          <img src="/assets/images/devin-excited.webp" alt="Lil Dev — the curious, creative kid at the center of every adventure">
+        </div>
+        <div class="char-card-body">
+          <div class="char-name">Lil Dev</div>
+          <div class="char-role">The Curious Kid</div>
+          <p class="char-desc">Lil Dev doesn't wait for adventure to find him — he builds it. Curious, creative, and always thinking, he turns everyday moments into discoveries that change everything.</p>
+          <div class="char-traits">
+            <span class="char-trait">Curious</span>
+            <span class="char-trait">Creative</span>
+            <span class="char-trait">Determined</span>
+            <span class="char-trait">Brave</span>
+            <span class="char-trait">Imaginative</span>
+          </div>
+          <a href="/meet-lil-dev/" class="btn-outline">Meet Lil Dev →</a>
+        </div>
+      </div>
+
+      <div class="char-card">
+        <div class="char-card-img" style="background:linear-gradient(160deg,#FFF8E8,#FFE8A0);">
+          <span class="char-card-badge" style="background:var(--orange);color:var(--white);">Companion</span>
+          <img src="/assets/images/angel-trotting.webp" alt="Angel — Lil Dev's loyal dog companion, always alert and ready for adventure">
+        </div>
+        <div class="char-card-body">
+          <div class="char-name">Angel</div>
+          <div class="char-role">The Loyal Companion</div>
+          <p class="char-desc">Angel has been with Lil Dev through every single adventure. She doesn't always understand what's happening — but she's always there. And sometimes, that's all you need.</p>
+          <div class="char-traits">
+            <span class="char-trait">Loyal</span>
+            <span class="char-trait">Alert</span>
+            <span class="char-trait">Brave</span>
+            <span class="char-trait">Loving</span>
+          </div>
+          <a href="/angel/" class="btn-outline">Meet Angel →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="coming-section">
+      <h2>More Characters Are Coming</h2>
+      <p>The world is growing. New faces, new stories, new perspectives — the universe of Lil Dev is just getting started.</p>
+      <div class="mystery-row">
+        <div class="mystery-card">
+          <div class="mystery-ico">❓</div>
+          <div class="mystery-lbl">Coming Soon</div>
+        </div>
+        <div class="mystery-card">
+          <div class="mystery-ico">❓</div>
+          <div class="mystery-lbl">Coming Soon</div>
+        </div>
+        <div class="mystery-card">
+          <div class="mystery-ico">❓</div>
+          <div class="mystery-lbl">Coming Soon</div>
+        </div>
+        <div class="mystery-card">
+          <div class="mystery-ico">❓</div>
+          <div class="mystery-lbl">Coming Soon</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <h2>Every Character Has a Story.</h2>
+  <p>Follow the adventures and watch them unfold.</p>
+  <div class="cta-row">
+    <a href="/adventures/" class="btn-primary" style="background:var(--dark);">See the Adventures</a>
+    <a href="/newsletter/" class="btn-primary" style="background:rgba(0,0,0,0.15);color:var(--dark);">Get Character Updates →</a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div>
+      <img class="footer-logo" src="/assets/images/lildev-logo-cropped.png" alt="Lil Dev World logo">
+      <p class="footer-tag">Enriching young minds through adventure and curiosity.<br>The world is always growing.</p>
+      <div class="footer-social">
+        <a href="https://instagram.com/lildevworld" target="_blank" rel="noopener" aria-label="Instagram">📸</a>
+        <a href="https://youtube.com/@lildevworld" target="_blank" rel="noopener" aria-label="YouTube">▶️</a>
+        <a href="https://tiktok.com/@lildevworld" target="_blank" rel="noopener" aria-label="TikTok">🎵</a>
+      </div>
+    </div>
+    <div class="footer-col"><div class="footer-col-title">The World</div><ul><li><a href="/the-world/">The World</a></li><li><a href="/meet-lil-dev/">Meet Lil Dev</a></li><li><a href="/characters/">Characters</a></li><li><a href="/angel/">Angel</a></li><li><a href="/origin-story/">Origin Story</a></li></ul></div>
+    <div class="footer-col"><div class="footer-col-title">Explore</div><ul><li><a href="/adventures/">Adventures</a></li><li><a href="/learn/">Learn Lab</a></li><li><a href="/games/">Games</a></li><li><a href="/updates/">Updates</a></li></ul></div>
+    <div class="footer-col"><div class="footer-col-title">Connect</div><ul><li><a href="/parents/">For Parents</a></li><li><a href="/newsletter/">Newsletter</a></li><li><a href="https://lildev.store" target="_blank" rel="noopener">LilDev Store</a></li><li><a href="https://jdproductions.io" target="_blank" rel="noopener">JD Productions</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Lil Dev World. All rights reserved.</p>
+    <a href="https://jdproductions.io" target="_blank" rel="noopener">A JD Productions property</a>
+  </div>
+</footer>
+<script>
+  const nav=document.getElementById('mainNav'),navLinks=document.getElementById('navLinks'),navArrow=document.getElementById('navArrow');
+  nav.addEventListener('click',function(e){if(window.innerWidth>768)return;if(e.target.closest('.nav-links a'))return;e.preventDefault();const o=navLinks.classList.toggle('open');navArrow.classList.toggle('open',o);navArrow.textContent=o?'▼ CLOSE':'▼ MENU';});
+</script>
+</body>
+</html>

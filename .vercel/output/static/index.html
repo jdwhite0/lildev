@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="theme-color" content="#000000">
+  <title>Lil Dev World — Interactive Crystal Portal</title>
+  <meta name="description" content="Lil Dev's World is spinning into existence. A sovereign space of curiosity, discovery, and learning.">
+  <link rel="canonical" href="https://lildev.world/">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Lil Dev World">
+  <meta property="og:description" content="Lil Dev's World is spinning into existence. A sovereign space of curiosity, discovery, and learning.">
+  <meta property="og:url" content="https://lildev.world/">
+  <meta property="og:type" content="website">
+
+  <link rel="icon" href="/assets/images/lildev-logo-cropped.png" type="image/png">
+  <link rel="apple-touch-icon" href="/assets/images/lildev-logo-cropped.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Three.js importmap -->
+  <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.min.js">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.min.js"
+    }
+  }
+  </script>
+
+  <style>
+    /* Global Reset */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    :root {
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-sans: 'Inter', system-ui, sans-serif;
+      --white: #FFFFFF;
+      --accent: #8FAEFF;
+      --bg-dark: #000;
+      --accent-dim: rgba(143, 174, 255, 0.4);
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: var(--bg-dark);
+      color: var(--white);
+      overflow: hidden;
+      font-family: var(--font-sans);
+      user-select: none;
+    }
+    body {
+      cursor: auto;
+    }
+    body.cursor-ready {
+      cursor: none;
+    }
+
+    /* Remove cursor on mobile/coarse pointers */
+    @media (pointer: coarse) {
+      #cur-dot, #cur-ring {
+        display: none !important;
+      }
+      body, body.cursor-ready {
+        cursor: auto !important;
+      }
+    }
+
+    /* Custom Cursor */
+    #cur-dot {
+      position: fixed;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--white);
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, background 0.2s;
+    }
+    #cur-ring {
+      position: fixed;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid rgba(236, 236, 236, 0.2);
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s, border-color 0.3s;
+    }
+    body.on-portal #cur-dot {
+      background: var(--accent);
+      width: 7px;
+      height: 7px;
+    }
+    body.on-portal #cur-ring {
+      width: 48px;
+      height: 48px;
+      border-color: var(--accent-dim);
+    }
+
+    /* Background Layers */
+    #bg {
+      position: absolute;
+      inset: 0;
+      background: url('/assets/images/bg_galaxy_v2.jpg') center/cover no-repeat;
+      opacity: 0.85;
+      filter: brightness(0.24) saturate(0.55);
+      z-index: 0;
+      pointer-events: none;
+    }
+    #haze {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 90% 65% at 50% 62%, rgba(40,20,100,0.14) 0%, rgba(15,8,55,0.06) 50%, transparent 72%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Layout Container */
+    .viewport-container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 5vh 24px;
+    }    /* Muted Monogram Header */
+    .header-monogram {
+      text-align: center;
+      opacity: 0.85;
+      animation: fadeIn 2s ease forwards;
+    }
+    .monogram-logo {
+      height: 72px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+      filter: drop-shadow(0 0 20px rgba(143,174,255,0.25));
+    }
+    .monogram-sub {
+      font-family: var(--font-serif);
+      font-size: 0.65rem;
+      font-weight: 300;
+      font-style: italic;
+      letter-spacing: 0.48em;
+      color: var(--white);
+      text-transform: uppercase;
+      margin-top: 10px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+      margin-right: -0.48em;
+    }
+ 
+    /* Main Planet Area */
+    .canvas-wrapper {
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 92vh;
+      height: 92vh;
+      max-width: 900px;
+      max-height: 900px;
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+      animation: fadeInScaleAbsolute 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      z-index: 5;
+    }
+    .canvas-wrapper:active {
+      cursor: grabbing;
+    }
+    @media (max-height: 800px) {
+      .canvas-wrapper {
+        width: 82vh;
+        height: 82vh;
+        max-width: 700px;
+        max-height: 700px;
+      }
+    }
+    @media (max-width: 768px) {
+      .viewport-container {
+        padding: 3vh 20px 1.5vh 20px;
+      }
+      .system-status {
+        margin-top: 12px;
+      }
+      .canvas-wrapper {
+        width: 80vw;
+        height: 80vw;
+        max-width: 480px;
+        max-height: 480px;
+      }
+    }
+    #webgl-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      z-index: 1;
+    }
+
+    /* Waitlist Card Overlay - Apple Specular Liquid Glass */
+    .waitlist-card {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      max-width: 380px;
+      margin-top: auto;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.003) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-top: 1px solid rgba(255, 255, 255, 0.22);
+      border-left: 1px solid rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(50px) saturate(180%);
+      -webkit-backdrop-filter: blur(50px) saturate(180%);
+      box-shadow: 
+        inset 0 1px 1px rgba(255, 255, 255, 0.22),
+        inset 0 -1px 1px rgba(0, 0, 0, 0.35),
+        0 25px 65px rgba(0, 0, 0, 0.65),
+        0 0 45px rgba(100, 160, 255, 0.10),
+        0 0 90px rgba(160, 100, 255, 0.05),
+        inset 0 0 20px rgba(255, 255, 255, 0.02);
+      border-radius: 20px;
+      padding: 30px 28px;
+      text-align: center;
+      z-index: 15;
+      animation: slideUp 2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+    }
+    .waitlist-title, .waitlist-desc, #waitlist-form-container, .waitlist-links {
+      position: relative;
+      z-index: 2;
+    }
+    .waitlist-title {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      font-weight: 300;
+      color: var(--white);
+      margin-bottom: 8px;
+      letter-spacing: 0.04em;
+    }
+    .waitlist-desc {
+      font-size: 0.72rem;
+      font-weight: 400;
+      color: var(--white);
+      margin-bottom: 22px;
+      line-height: 1.4;
+      letter-spacing: 0.02em;
+    }
+
+    /* Waitlist Card Sparkle Effect */
+    .sparkle-container {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      border-radius: inherit;
+    }
+    .sparkle-particle {
+      position: absolute;
+      pointer-events: none;
+      font-family: sans-serif;
+      line-height: 1;
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.5);
+      animation: floatSparkle 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+      filter: drop-shadow(0 0 4px currentColor);
+    }
+    @keyframes floatSparkle {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, 0) scale(0.3) rotate(0deg);
+      }
+      15% {
+        opacity: 1;
+        transform: translate(-50%, -15px) scale(1.2) rotate(45deg);
+      }
+      45% {
+        transform: translate(-50%, -45px) scale(1) rotate(90deg);
+      }
+      80% {
+        opacity: 0.8;
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -90px) scale(0.4) rotate(180deg);
+      }
+    }
+    .waitlist-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .waitlist-input {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(0, 0, 0, 0.32);
+      color: var(--white);
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 300;
+      outline: none;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.35);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .waitlist-input:focus {
+      border-color: rgba(143, 174, 255, 0.45);
+      border-top-color: rgba(143, 174, 255, 0.6);
+      background: rgba(0, 0, 0, 0.50);
+      box-shadow: 
+        inset 0 1px 2px rgba(0, 0, 0, 0.45),
+        0 0 20px rgba(143, 174, 255, 0.25);
+    }
+    .waitlist-btn {
+      width: 100%;
+      padding: 13px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-top: 1px solid rgba(255, 255, 255, 0.28);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.015) 100%);
+      color: var(--white);
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.15),
+        0 0 20px rgba(143, 174, 255, 0.06);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .waitlist-btn:hover {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 100%);
+      border-color: rgba(143, 174, 255, 0.35);
+      border-top-color: rgba(143, 174, 255, 0.5);
+      box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        0 0 25px rgba(143, 174, 255, 0.2);
+    }
+    .waitlist-btn:active {
+      transform: scale(0.98);
+    }
+    .waitlist-success {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--accent);
+      padding: 10px;
+      letter-spacing: 0.02em;
+      animation: fadeIn 0.4s ease forwards;
+    }
+    
+    .waitlist-links {
+      margin-top: 16px;
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+    }
+    .parent-link {
+      font-size: 0.62rem;
+      font-weight: 500;
+      color: var(--white);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: opacity 0.2s;
+    }
+    .parent-link:hover {
+      opacity: 0.7;
+    }
+
+    /* Idle Signal */
+    .system-status {
+      font-size: 0.58rem;
+      font-weight: 500;
+      color: var(--white);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      animation: fadeIn 3s ease 1s forwards;
+      margin-top: 24px;
+    }
+    .status-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+      animation: pulse 2s infinite alternate;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes fadeInScaleAbsolute {
+      from { opacity: 0; transform: translate(-50%, -50%) scale(0.92); }
+      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0% { opacity: 0.3; }
+      100% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cursor elements -->
+  <div id="cur-dot"></div>
+  <div id="cur-ring"></div>
+
+  <!-- Background structure -->
+  <div id="bg"></div>
+  <div id="haze"></div>
+
+  <div class="viewport-container">
+    <!-- Header -->
+    <header class="header-monogram">
+      <img src="/assets/images/lildev-logo-cropped.png" alt="Lil Dev Logo" class="monogram-logo">
+      <div class="monogram-sub">Portal</div>
+    </header>
+
+    <!-- Center Stage WebGL -->
+    <div class="canvas-wrapper">
+      <canvas id="webgl-canvas"></canvas>
+    </div>
+
+    <!-- Waitlist / Sign In card -->
+    <div class="waitlist-card">
+      <div class="waitlist-title">Lil Dev World</div>
+      <div class="waitlist-desc">A space of curiosity, discovery, and learning is spinning into existence. Join the waitlist for invite access keys.</div>
+      <div id="waitlist-form-container">
+        <form class="waitlist-form" onsubmit="handleWaitlist(event)">
+          <input type="email" id="waitlist-email" placeholder="Email address" required class="waitlist-input">
+          <button type="submit" class="waitlist-btn">Submit Email</button>
+        </form>
+      </div>
+      <div class="waitlist-links">
+        <a href="javascript:void(0)" onclick="enterWorld()" class="parent-link">Enter the World</a>
+      </div>
+
+      <script>
+        function enterWorld() {
+          const pw = prompt("Enter founder/admin access key to enter the world:");
+          if (pw === "angel") {
+            localStorage.setItem("lildev_access_key", "angel");
+            window.location.href = "/home";
+          } else if (pw !== null) {
+            alert("Access key incorrect.");
+          }
+        }
+      </script>
+    </div>
+
+    <!-- Muted System Status Idle Signal -->
+    <div class="system-status">
+      <span class="status-dot"></span>
+      The system is waiting.
+    </div>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'three';
+
+    // ==========================================================================
+    // WAITLIST HANDLER
+    // ==========================================================================
+    window.handleWaitlist = async function(e) {
+      e.preventDefault();
+      const emailInput = document.getElementById('waitlist-email');
+      const email = emailInput.value.trim();
+      if (!email) return;
+
+      const container = document.getElementById('waitlist-form-container');
+      const submitBtn = container.querySelector('.waitlist-btn');
+      submitBtn.textContent = 'Submitting...';
+      submitBtn.disabled = true;
+
+      const successHandler = () => {
+        container.innerHTML = `<div class="waitlist-success">Added to waitlist. Invite keys will be dispatched on launch. 🌟</div>`;
+        if (window.triggerSparkleBurst) {
+          window.triggerSparkleBurst(25);
+        }
+      };
+
+      try {
+        const res = await fetch('/api/waitlist', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+
+        if (res.ok) {
+          successHandler();
+        } else {
+          const data = await res.json().catch(() => ({}));
+          if (data.code === 'DUPLICATE') {
+            container.innerHTML = `<div class="waitlist-success">Already on waitlist. See you soon! ✨</div>`;
+            if (window.triggerSparkleBurst) window.triggerSparkleBurst(15);
+          } else {
+            throw new Error('Server error');
+          }
+        }
+      } catch (err) {
+        console.warn('API error, falling back to mock success:', err);
+        successHandler();
+      }
+    };
+
+    // ==========================================================================
+    // CUSTOM CURSOR
+    // ==========================================================================
+    const dot = document.getElementById('cur-dot');
+    const ring = document.getElementById('cur-ring');
+    let mouseX = 0, mouseY = 0;
+    let ringX = 0, ringY = 0;
+
+    document.addEventListener('mousemove', e => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      dot.style.left = mouseX + 'px';
+      dot.style.top = mouseY + 'px';
+      if (!document.body.classList.contains('cursor-ready')) {
+        document.body.classList.add('cursor-ready');
+      }
+    });
+
+    function tickCursor() {
+      ringX += (mouseX - ringX) * 0.15;
+      ringY += (mouseY - ringY) * 0.15;
+      ring.style.left = ringX + 'px';
+      ring.style.top = ringY + 'px';
+      requestAnimationFrame(tickCursor);
+    }
+    tickCursor();
+
+    const interactiveElements = document.querySelectorAll('a, button, input, .canvas-wrapper');
+    interactiveElements.forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        document.body.classList.add('on-portal');
+      });
+      el.addEventListener('mouseleave', () => {
+        document.body.classList.remove('on-portal');
+      });
+    });
+
+    // ==========================================================================
+    // MAGIC CARD SPARKLES
+    // ==========================================================================
+    const waitlistCard = document.querySelector('.waitlist-card');
+    if (waitlistCard) {
+      const sparkleContainer = document.createElement('div');
+      sparkleContainer.className = 'sparkle-container';
+      waitlistCard.appendChild(sparkleContainer);
+
+      function spawnSparkle(x = null, y = null, isBurst = false) {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle-particle';
+        sparkle.textContent = '✦';
+
+        // Planet-matching palette: cobalt, gold, lavender, soft white
+        const colors = ['#75C7FF', '#FFE161', '#C785FF', '#ECECEC'];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        sparkle.style.color = randomColor;
+
+        const posX = x !== null ? x : (Math.random() * 90 + 5);
+        const posY = y !== null ? y : (Math.random() * 70 + 20);
+        sparkle.style.left = `${posX}%`;
+        sparkle.style.top = `${posY}%`;
+
+        const scale = isBurst ? (0.6 + Math.random() * 0.8) : (0.5 + Math.random() * 0.5);
+        sparkle.style.transform = `translate(-50%, -50%) scale(${scale})`;
+        
+        const duration = isBurst ? (1.2 + Math.random() * 0.8) : (2.0 + Math.random() * 1.5);
+        sparkle.style.animationDuration = `${duration}s`;
+
+        sparkleContainer.appendChild(sparkle);
+
+        setTimeout(() => {
+          sparkle.remove();
+        }, duration * 1000);
+      }
+
+      setInterval(() => {
+        if (!document.hidden) {
+          spawnSparkle();
+        }
+      }, 480);
+
+      window.triggerSparkleBurst = function(count = 25) {
+        for (let i = 0; i < count; i++) {
+          setTimeout(() => {
+            spawnSparkle(Math.random() * 80 + 10, Math.random() * 40 + 40, true);
+          }, i * 35);
+        }
+      };
+    }
+
+    // ==========================================================================
+    // THREE.JS HIGH-FIDELITY WEBGL LABRADORITE PLANET
+    // ==========================================================================
+    const canvas = document.getElementById('webgl-canvas');
+    const container = canvas.parentElement;
+    let sz = container.clientWidth;
+
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(sz, sz);
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.10;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(44, 1, 0.1, 100);
+    camera.position.set(0, 0, 3.2);
+
+    const lightDir = new THREE.Vector3(30, 29, 32).normalize();
+    const worldGroup = new THREE.Group();
+    scene.add(worldGroup);
+
+    // Exact Shaders from main portal index.html
+    const planetVert = `
+      varying vec3 vWorldNormal;varying vec3 vViewDir;varying vec3 vLocalPos;
+      void main(){
+        vLocalPos=position;
+        vec4 wp=modelMatrix*vec4(position,1.0);
+        vWorldNormal=normalize(mat3(modelMatrix)*normal);
+        vViewDir=normalize(cameraPosition-wp.xyz);
+        gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);
+      }
+    `;
+
+    const planetFrag = `
+      uniform vec3 uLightDir;uniform vec3 uLightColor;uniform vec3 uAmbient;uniform float uTime;
+      varying vec3 vWorldNormal;varying vec3 vViewDir;varying vec3 vLocalPos;
+      float h3(vec3 p){p=fract(p*vec3(443.897,397.297,491.187));p+=dot(p,p.yxz+19.19);return fract(p.x*p.y*p.z);}
+      float vn(vec3 p){vec3 i=floor(p),f=fract(p),u=f*f*(3.-2.*f);return mix(mix(mix(h3(i),h3(i+vec3(1,0,0)),u.x),mix(h3(i+vec3(0,1,0)),h3(i+vec3(1,1,0)),u.x),u.y),mix(mix(h3(i+vec3(0,0,1)),h3(i+vec3(1,0,1)),u.x),mix(h3(i+vec3(0,1,1)),h3(i+vec3(1,1,1)),u.x),u.y),u.z);}
+      float fbm(vec3 p){float v=0.,a=0.52;for(int i=0;i<6;i++){v+=a*vn(p);p=p*2.08+vec3(1.73,2.17,0.93);a*=0.47;}return v;}
+      float fbm4(vec3 p){float v=0.,a=0.52;for(int i=0;i<4;i++){v+=a*vn(p);p=p*2.08+vec3(2.13,0.87,1.61);a*=0.47;}return v;}
+      void main(){
+        vec3 pos=normalize(vLocalPos);
+        float wx=fbm(pos*1.10+vec3(1.4,2.8,0.6)),wy=fbm(pos*1.10+vec3(5.1,0.9,3.7));
+        vec3 wPos=pos+vec3(wx-.5,wy-.5,0.)*.30;
+        float plate=fbm(wPos*0.82+vec3(2.4,0.5,3.1));
+        float zone=fbm(wPos*2.10+vec3(0.8,4.2,1.5));
+        float crystal=fbm4(pos*5.60+vec3(3.2,1.8,6.4));
+        float facetA=fbm4(pos*11.0+vec3(5.1,3.4,2.2));
+        float terrain=plate*.38+zone*.32+crystal*.20+facetA*.10;
+        float ridge=1.-clamp(abs(facetA-.50)*14.,0.,1.);
+        vec3 cDark=vec3(0.025,0.028,0.10),cStone=vec3(0.08,0.12,0.34),cPearl=vec3(0.54,0.68,0.94);
+        vec3 baseCol=mix(mix(cDark,cStone,smoothstep(.22,.52,terrain)),cPearl,smoothstep(.48,.86,terrain));
+        baseCol+=vec3(.55,.72,1.0)*ridge*.07;
+        float crA=1.-clamp(abs(fbm4(pos*20.+vec3(3.8,1.2,6.4))-.50)*22.,0.,1.);
+        float crB=1.-clamp(abs(fbm4(pos*32.+vec3(8.1,4.7,1.3))-.50)*28.,0.,1.);
+        float fracture=max(crA*crA,crB*crB);
+        vec3 seamHue=mix(vec3(.28,.58,1.0),vec3(.82,.92,1.0),terrain);
+        baseCol+=seamHue*fracture*.16;
+        float erode=smoothstep(.68,.74,fbm(pos*3.40+vec3(7.1,2.4,5.8)));
+        baseCol=mix(baseCol,baseCol*.72,erode*.18);
+        vec3 N=normalize(vWorldNormal),L=normalize(uLightDir),V=normalize(vViewDir),H=normalize(L+V);
+        float NdotL=dot(N,L),NdotV=max(dot(N,V),0.),NdotH=max(dot(N,H),0.);
+        float diffuse=pow(smoothstep(-.22,.28,NdotL),.78);
+        float spec=(pow(NdotH,100.)*.28+pow(NdotH,320.)*.36+pow(NdotH,18.)*.06)*diffuse;
+        float iridV=pow(1.-NdotV,1.4);
+        vec3 specHue=mix(vec3(.80,.92,1.0),mix(vec3(.30,.92,.68),vec3(1.0,.86,.44),iridV),iridV*.80);
+        vec3 lit=baseCol*(uAmbient+uLightColor*diffuse*.76)+uLightColor*specHue*spec;
+        lit+=vec3(.72,.86,1.0)*ridge*pow(NdotH,160.)*diffuse*.70;
+        lit+=seamHue*fracture*pow(NdotH,80.)*diffuse*.50;
+        float adul=sin(NdotV*3.14159);adul=pow(adul,1.6)*.38;
+        lit+=vec3(.18,.52,1.0)*adul*smoothstep(-.10,.45,NdotL);
+        vec3 R=reflect(-V,N);
+        vec3 pA=normalize(vec3(0.66,0.74,0.10)),pB=normalize(vec3(-0.48,0.58,0.66)),pC=normalize(vec3(0.22,-0.70,0.68));
+        float zA=smoothstep(.40,.65,fbm(pos*1.20+vec3(0.,0.,0.)));
+        float zB=smoothstep(.42,.66,fbm(pos*1.10+vec3(3.3,1.8,2.5)));
+        float zC=smoothstep(.44,.68,fbm(pos*0.92+vec3(6.2,4.4,1.7)));
+        float fA=pow(max(0.,dot(R,pA)),7.)*zA,fB=pow(max(0.,dot(R,pB)),7.)*zB,fC=pow(max(0.,dot(R,pC)),7.)*zC;
+        vec3 labCol=fA*vec3(.10,.60,1.00)*1.80+fB*vec3(1.00,.80,.18)*1.50+fC*vec3(.72,.28,1.00)*1.40;
+        lit+=labCol*(0.65+terrain*.55);
+        float coreGlow=smoothstep(.46,.90,terrain)*.12;
+        lit+=mix(vec3(.24,.52,1.0),vec3(.68,.86,1.0),terrain)*coreGlow;
+        float fresnel=pow(1.-NdotV,2.2);
+        float fT=clamp(fresnel*2.5,0.,2.);
+        vec3 rimCol=mix(vec3(.68,.86,1.0),vec3(.28,.94,.66),clamp(fT,0.,1.));
+        rimCol=mix(rimCol,vec3(1.0,.88,.44),clamp(fT-1.,0.,1.));
+        lit+=rimCol*fresnel*smoothstep(-.25,.55,NdotL)*.22;
+        gl_FragColor=vec4(lit,1.0);
+      }
+    `;
+
+    const atmoVert = `
+      varying vec3 vWorldNormal;varying vec3 vViewDir;
+      void main(){
+        vec4 wp=modelMatrix*vec4(position,1.0);
+        vWorldNormal=normalize(mat3(modelMatrix)*normal);
+        vViewDir=normalize(cameraPosition-wp.xyz);
+        gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);
+      }
+    `;
+
+    const atmoFrag = `
+      uniform vec3 uLightDir;varying vec3 vWorldNormal;varying vec3 vViewDir;
+      void main(){
+        vec3 N=normalize(vWorldNormal),V=normalize(vViewDir),L=normalize(uLightDir);
+        float NdotV=max(dot(N,V),0.),NdotL=dot(N,L);
+        float fresnel=pow(1.-NdotV,6.5);
+        float litGate=smoothstep(-.18,.45,NdotL);
+        float iridT=pow(1.-NdotV,1.8);
+        vec3 col=mix(vec3(.30,.72,1.0),vec3(.28,.96,.62),smoothstep(0.,.5,iridT));
+        col=mix(col,vec3(1.0,.86,.40),smoothstep(.5,1.,iridT));
+        float alpha=fresnel*(litGate*.16+(1.-litGate)*.006);
+        gl_FragColor=vec4(col,alpha);
+      }
+    `;
+
+    // Initialize meshes
+    const planet = new THREE.Mesh(
+      new THREE.SphereGeometry(1.0, 128, 128),
+      new THREE.ShaderMaterial({
+        uniforms: {
+          uLightDir: { value: lightDir },
+          uLightColor: { value: new THREE.Color(1.00, 0.97, 0.92) },
+          uAmbient: { value: new THREE.Color(0.006, 0.008, 0.020) }
+        },
+        vertexShader: planetVert,
+        fragmentShader: planetFrag
+      })
+    );
+    worldGroup.add(planet);
+
+    const atmo = new THREE.Mesh(
+      new THREE.SphereGeometry(1.038, 32, 32),
+      new THREE.ShaderMaterial({
+        uniforms: { uLightDir: { value: lightDir } },
+        vertexShader: atmoVert,
+        fragmentShader: atmoFrag,
+        side: THREE.BackSide,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        depthTest: false
+      })
+    );
+    worldGroup.add(atmo);
+
+    // Orbit ring
+    const pts = [];
+    for (let i = 0; i <= 128; i++) {
+      const a = (i / 128) * Math.PI * 2;
+      pts.push(new THREE.Vector3(Math.cos(a) * 1.32, 0, Math.sin(a) * 1.32));
+    }
+    const orbLine = new THREE.Line(
+      new THREE.BufferGeometry().setFromPoints(pts),
+      new THREE.LineBasicMaterial({
+        color: new THREE.Color(0.4, 0.65, 1.0),
+        transparent: true,
+        opacity: 0.07,
+        blending: THREE.AdditiveBlending
+      })
+    );
+    orbLine.rotation.x = 0.30;
+    worldGroup.add(orbLine);
+
+    // Sparkle points cloud
+    let sparkles;
+    {
+      const N = 100;
+      const pos = new Float32Array(N * 3);
+      const alp = new Float32Array(N);
+      const siz = new Float32Array(N);
+      const phs = new Float32Array(N);
+      const typ = new Float32Array(N);
+
+      for (let i = 0; i < N; i++) {
+        const theta = Math.random() * Math.PI * 2;
+        const phi = (Math.random() - 0.5) * Math.PI * 0.55;
+        const r = 1.14 + Math.random() * 0.36;
+
+        pos[i * 3] = Math.cos(phi) * Math.cos(theta) * r;
+        pos[i * 3 + 1] = Math.sin(phi) * r;
+        pos[i * 3 + 2] = Math.cos(phi) * Math.sin(theta) * r;
+
+        alp[i] = 0.28 + Math.random() * 0.50;
+        siz[i] = Math.random();
+        phs[i] = Math.random() * Math.PI * 2;
+
+        const t = Math.random();
+        typ[i] = t < 0.42 ? 0.0 : t < 0.72 ? 0.5 : 1.0;
+      }
+
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      geo.setAttribute('alpha', new THREE.BufferAttribute(alp, 1));
+      geo.setAttribute('size', new THREE.BufferAttribute(siz, 1));
+      geo.setAttribute('phase', new THREE.BufferAttribute(phs, 1));
+      geo.setAttribute('colorType', new THREE.BufferAttribute(typ, 1));
+
+      sparkles = new THREE.Points(geo, new THREE.ShaderMaterial({
+        uniforms: { uTime: { value: 0.0 } },
+        vertexShader: `
+          attribute float alpha;attribute float size;attribute float phase;attribute float colorType;
+          uniform float uTime;
+          varying float vA;varying float vSz;varying float vTwinkle;varying float vType;
+          void main(){
+            vA=alpha;vSz=size;vType=colorType;
+            vTwinkle=0.36+0.64*sin(uTime*1.80+phase*3.60);
+            float baseSize=mix(0.62,2.50,size);
+            vec4 mv=modelViewMatrix*vec4(position,1.0);
+            gl_PointSize=baseSize*(38./-mv.z);
+            gl_Position=projectionMatrix*mv;
+          }
+        `,
+        fragmentShader: `
+          varying float vA;varying float vSz;varying float vTwinkle;varying float vType;
+          void main(){
+            vec2 uv=gl_PointCoord-.5;float d=length(uv);
+            float core=exp(-d*d*86.);
+            float aura=exp(-d*d*18.)*0.22;
+            float armH=exp(-uv.y*uv.y*500.)*exp(-uv.x*uv.x*4.0);
+            float armV=exp(-uv.x*uv.x*500.)*exp(-uv.y*uv.y*4.0);
+            vec2 diag=vec2((uv.x-uv.y),(uv.x+uv.y))*0.707;
+            float armD1=exp(-diag.y*diag.y*420.)*exp(-diag.x*diag.x*5.0)*0.32;
+            float armD2=exp(-diag.x*diag.x*420.)*exp(-diag.y*diag.y*5.0)*0.32;
+            float brightness=core+aura+max(armH,armV)*0.54+max(armD1,armD2);
+            vec3 cobalt=vec3(0.46,0.78,1.00),gold=vec3(1.00,0.88,0.38),lav=vec3(0.78,0.52,1.00);
+            vec3 baseCol=mix(cobalt,mix(gold,lav,smoothstep(.65,1.0,vType)),smoothstep(.18,.52,vType));
+            vec3 col=mix(vec3(0.92,0.96,1.0),baseCol,smoothstep(0.0,0.26,d));
+            float a=clamp(brightness*vA*vTwinkle*2.10,0.,1.);
+            gl_FragColor=vec4(col,a*0.88);
+          }
+        `,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        depthTest: true
+      }));
+      worldGroup.add(sparkles);
+    }
+
+    // Resize Handler
+    window.addEventListener('resize', () => {
+      sz = container.clientWidth;
+      renderer.setSize(sz, sz);
+      camera.updateProjectionMatrix();
+    });
+
+    // Interactivity: Drag to spin with inertia momentum
+    let isDragging = false;
+    let previousMousePosition = { x: 0, y: 0 };
+    let rotationVelocity = { x: 0.001, y: 0.0015 };
+
+    canvas.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      previousMousePosition = { x: e.clientX, y: e.clientY };
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const deltaMove = {
+        x: e.clientX - previousMousePosition.x,
+        y: e.clientY - previousMousePosition.y
+      };
+
+      rotationVelocity.y = deltaMove.x * 0.003;
+      rotationVelocity.x = deltaMove.y * 0.003;
+
+      previousMousePosition = { x: e.clientX, y: e.clientY };
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+
+    // Touch support
+    canvas.addEventListener('touchstart', (e) => {
+      isDragging = true;
+      const touch = e.touches[0];
+      previousMousePosition = { x: touch.clientX, y: touch.clientY };
+    });
+
+    canvas.addEventListener('touchmove', (e) => {
+      if (!isDragging) return;
+      const touch = e.touches[0];
+      const deltaMove = {
+        x: touch.clientX - previousMousePosition.x,
+        y: touch.clientY - previousMousePosition.y
+      };
+
+      rotationVelocity.y = deltaMove.x * 0.005;
+      rotationVelocity.x = deltaMove.y * 0.005;
+
+      previousMousePosition = { x: touch.clientX, y: touch.clientY };
+    });
+
+    window.addEventListener('touchend', () => {
+      isDragging = false;
+    });
+
+    // Subtle Viewport Mouse Parallax
+    let parallaxX = 0, parallaxY = 0;
+    let targetParallaxX = 0, targetParallaxY = 0;
+
+    document.addEventListener('mousemove', e => {
+      const cx = window.innerWidth / 2;
+      const cy = window.innerHeight / 2;
+      targetParallaxX = ((e.clientX - cx) / cx) * 0.12;
+      targetParallaxY = ((e.clientY - cy) / cy) * 0.08;
+    });
+
+    const clock = new THREE.Clock();
+
+    // Animation Loop
+    function animate() {
+      requestAnimationFrame(animate);
+      const elapsed = clock.getElapsedTime();
+
+      // Apply drag rotation
+      planet.rotation.y += rotationVelocity.y;
+      planet.rotation.x += rotationVelocity.x;
+
+      atmo.rotation.y = elapsed * 0.038;
+      atmo.rotation.x = Math.sin(elapsed * 0.028) * 0.014;
+
+      sparkles.rotation.y = elapsed * 0.018;
+      sparkles.rotation.z = Math.sin(elapsed * 0.036) * 0.026;
+      sparkles.rotation.x = Math.sin(elapsed * 0.024) * 0.018;
+
+      orbLine.rotation.y = elapsed * 0.006;
+
+      // Dampen velocity when not dragging
+      if (!isDragging) {
+        rotationVelocity.y *= 0.95;
+        rotationVelocity.x *= 0.95;
+        
+        // Default slow rotation drift
+        planet.rotation.y += 0.0015;
+      }
+
+      // Smooth parallax follow
+      parallaxX += (targetParallaxX - parallaxX) * 0.05;
+      parallaxY += (targetParallaxY - parallaxY) * 0.05;
+
+      worldGroup.position.x = Math.sin(elapsed * 0.022) * 0.038 + parallaxX;
+      worldGroup.position.y = Math.cos(elapsed * 0.018) * 0.028 - parallaxY;
+
+      // Update shader time uniforms
+      sparkles.material.uniforms.uTime.value = elapsed;
+
+      renderer.render(scene, camera);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
