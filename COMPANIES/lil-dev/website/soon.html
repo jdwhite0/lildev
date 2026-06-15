@@ -418,6 +418,10 @@
       letter-spacing: 0.05em;
       text-transform: uppercase;
       transition: opacity 0.2s;
+      cursor: pointer;
+      display: inline-block;
+      padding: 8px 12px;
+      margin-left: -12px;
     }
     .parent-link:hover {
       opacity: 0.7;
@@ -526,27 +530,77 @@
         <!-- Right Side: Content -->
         <div class="card-text-side">
           <div class="waitlist-title">Lil Dev World</div>
-          <div class="waitlist-desc">A space of curiosity, discovery, and learning is spinning into existence. Join the waitlist for invite access keys.</div>
-          <div id="waitlist-form-container">
-            <form class="waitlist-form" onsubmit="handleWaitlist(event)">
-              <input type="email" id="waitlist-email" placeholder="Email address" required class="waitlist-input">
-              <button type="submit" class="waitlist-btn">JOIN THE WAITLIST</button>
-            </form>
+          
+          <!-- Waitlist View -->
+          <div id="waitlist-view">
+            <div class="waitlist-desc">A space of curiosity, discovery, and learning is spinning into existence. Join the waitlist for invite access keys.</div>
+            <div id="waitlist-form-container">
+              <form class="waitlist-form" onsubmit="handleWaitlist(event)">
+                <input type="email" id="waitlist-email" placeholder="Email address" required class="waitlist-input">
+                <button type="submit" class="waitlist-btn">JOIN THE WAITLIST</button>
+              </form>
+            </div>
+            <div class="waitlist-links">
+              <a href="#" onclick="showAccessKeyView(event)" class="parent-link">Enter the World</a>
+            </div>
           </div>
-          <div class="waitlist-links">
-            <a href="javascript:void(0)" onclick="enterWorld()" class="parent-link">Enter the World</a>
+
+          <!-- Access Key View (hidden by default) -->
+          <div id="access-key-view" style="display: none;">
+            <div class="waitlist-desc">Enter founder/admin access key to enter the world:</div>
+            <div id="access-form-container">
+              <form class="waitlist-form" onsubmit="handleAccessKeySubmit(event)">
+                <input type="password" id="access-key-input" placeholder="Access key" required class="waitlist-input">
+                <button type="submit" class="waitlist-btn">ENTER THE WORLD</button>
+              </form>
+              <div id="access-key-error" style="color: #FF8F8F; font-size: 0.65rem; margin-top: 8px; font-weight: 500; display: none; text-shadow: 0 1px 4px rgba(0,0,0,0.5);">Access key incorrect.</div>
+            </div>
+            <div class="waitlist-links">
+              <a href="#" onclick="showWaitlistView(event)" class="parent-link">Back to Waitlist</a>
+            </div>
           </div>
         </div>
       </div>
 
       <script>
-        function enterWorld() {
-          const pw = prompt("Enter founder/admin access key to enter the world:");
+        function showAccessKeyView(e) {
+          if (e) e.preventDefault();
+          document.getElementById('waitlist-view').style.display = 'none';
+          document.getElementById('access-key-view').style.display = 'block';
+          setTimeout(() => {
+            const input = document.getElementById('access-key-input');
+            if (input) input.focus();
+          }, 50);
+        }
+
+        function showWaitlistView(e) {
+          if (e) e.preventDefault();
+          document.getElementById('access-key-view').style.display = 'none';
+          document.getElementById('waitlist-view').style.display = 'block';
+          const errDiv = document.getElementById('access-key-error');
+          if (errDiv) errDiv.style.display = 'none';
+        }
+
+        function handleAccessKeySubmit(e) {
+          if (e) e.preventDefault();
+          const pwInput = document.getElementById('access-key-input');
+          const errDiv = document.getElementById('access-key-error');
+          if (!pwInput) return;
+          
+          const pw = pwInput.value.trim();
           if (pw === "angel") {
             localStorage.setItem("lildev_access_key", "angel");
             window.location.href = "/home";
-          } else if (pw !== null) {
-            alert("Access key incorrect.");
+          } else {
+            if (errDiv) {
+              errDiv.style.display = 'block';
+              pwInput.style.borderColor = 'rgba(255, 107, 107, 0.5)';
+              pwInput.style.boxShadow = '0 0 15px rgba(255, 107, 107, 0.25)';
+              setTimeout(() => {
+                pwInput.style.borderColor = '';
+                pwInput.style.boxShadow = '';
+              }, 1500);
+            }
           }
         }
       </script>
