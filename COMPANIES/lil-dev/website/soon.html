@@ -771,14 +771,14 @@
         float zB=smoothstep(.42,.66,fbm(pos*1.10+vec3(3.3,1.8,2.5)));
         float zC=smoothstep(.44,.68,fbm(pos*0.92+vec3(6.2,4.4,1.7)));
         float fA=pow(max(0.,dot(R,pA)),7.)*zA,fB=pow(max(0.,dot(R,pB)),7.)*zB,fC=pow(max(0.,dot(R,pC)),7.)*zC;
-        vec3 labCol=fA*vec3(.10,.60,1.00)*1.80+fB*vec3(1.00,.80,.18)*1.50+fC*vec3(.72,.28,1.00)*1.40;
+        vec3 labCol=fA*vec3(.10,.60,1.00)*1.80+fB*vec3(.10,.60,1.00)*1.50+fC*vec3(.72,.28,1.00)*1.40;
         lit+=labCol*(0.65+terrain*.55);
         float coreGlow=smoothstep(.46,.90,terrain)*.12;
         lit+=mix(vec3(.24,.52,1.0),vec3(.68,.86,1.0),terrain)*coreGlow;
         float fresnel=pow(1.-NdotV,2.2);
         float fT=clamp(fresnel*2.5,0.,2.);
         vec3 rimCol=mix(vec3(.68,.86,1.0),vec3(.28,.94,.66),clamp(fT,0.,1.));
-        rimCol=mix(rimCol,vec3(1.0,.88,.44),clamp(fT-1.,0.,1.));
+        rimCol=mix(rimCol,vec3(.40,.65,1.0),clamp(fT-1.,0.,1.));
         lit+=rimCol*fresnel*smoothstep(-.25,.55,NdotL)*.22;
         gl_FragColor=vec4(lit,1.0);
       }
@@ -803,7 +803,7 @@
         float litGate=smoothstep(-.18,.45,NdotL);
         float iridT=pow(1.-NdotV,1.8);
         vec3 col=mix(vec3(.30,.72,1.0),vec3(.28,.96,.62),smoothstep(0.,.5,iridT));
-        col=mix(col,vec3(1.0,.86,.40),smoothstep(.5,1.,iridT));
+        col=mix(col,vec3(.40,.65,1.0),smoothstep(.5,1.,iridT));
         float alpha=fresnel*(litGate*.16+(1.-litGate)*.006);
         gl_FragColor=vec4(col,alpha);
       }
