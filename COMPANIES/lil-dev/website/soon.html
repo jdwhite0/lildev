@@ -138,6 +138,8 @@
       padding: 5vh 24px;
     }    /* Muted Monogram Header */
     .header-monogram {
+      position: relative;
+      z-index: 10;
       text-align: center;
       opacity: 0.85;
       animation: fadeIn 2s ease forwards;
@@ -240,6 +242,20 @@
       text-align: center;
       z-index: 15;
       animation: slideUp 2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+    }
+    .waitlist-card::after {
+      content: "";
+      position: absolute;
+      bottom: -15px;
+      right: -15px;
+      width: 140px;
+      height: 140px;
+      background: url('/assets/images/devin-excited.webp') no-repeat center/contain;
+      opacity: 0.07;
+      pointer-events: none;
+      z-index: 1;
+      transform: rotate(-8deg);
+      filter: brightness(1.2) contrast(0.95);
     }
     .waitlist-title, .waitlist-desc, #waitlist-form-container, .waitlist-links {
       position: relative;
