@@ -41,8 +41,10 @@ npm run guard:waitlist
 
 `lildev.world` is the **lildev-site** Vercel project, linked to this repository. Merging to `main` auto-deploys production.
 
+**Vercel Root Directory MUST be `COMPANIES/lil-dev/website`.** Never deploy `lildev-site` from the repo root (`./`). Never commit `.vercel/output` (or any generated `.vercel/` tree). A committed prebuild at repo root made Vercel serve a stale trailing-slash `sitemap.xml` even after the source sitemap was slashless. `.gitignore` ignores `.vercel/` so prebuilds stay local.
+
 1. Merge the waitlist/SEO PR into `lildev` `main`.
-2. Confirm Vercel production deploy for `lildev-site` from `COMPANIES/lil-dev/website/` (`cleanUrls: true`, `trailingSlash: false`).
+2. Confirm Vercel production deploy for `lildev-site` from `COMPANIES/lil-dev/website/` (`cleanUrls: true`, `trailingSlash: false`). Root Directory in the dashboard must match that path.
 3. Confirm live `/` shows JOIN THE WAITLIST, `/soon` 308s to `/`, `/home` and section URLs stay open without the key, and `angel` still opens `/home` from the waitlist.
 4. Confirm each sitemap `<loc>` except the homepage returns **200 with no redirect**:
 
