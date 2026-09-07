@@ -1,0 +1,8 @@
+{
+  "name": "lildev-world",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "guard:waitlist": "node ./guard-lildev-waitlist.mjs"
+  }
+}

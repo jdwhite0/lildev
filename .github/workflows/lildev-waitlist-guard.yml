@@ -1,0 +1,39 @@
+name: Lil Dev waitlist production guard
+
+on:
+  pull_request:
+    paths:
+      - 'COMPANIES/lil-dev/website/index.html'
+      - 'COMPANIES/lil-dev/website/soon.html'
+      - 'COMPANIES/lil-dev/website/home.html'
+      - 'COMPANIES/lil-dev/website/vercel.json'
+      - 'COMPANIES/lil-dev/website/robots.txt'
+      - 'COMPANIES/lil-dev/website/sitemap.xml'
+      - 'COMPANIES/lil-dev/website/guard-lildev-waitlist.mjs'
+      - '.github/workflows/lildev-waitlist-guard.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'COMPANIES/lil-dev/website/index.html'
+      - 'COMPANIES/lil-dev/website/soon.html'
+      - 'COMPANIES/lil-dev/website/home.html'
+      - 'COMPANIES/lil-dev/website/vercel.json'
+      - 'COMPANIES/lil-dev/website/robots.txt'
+      - 'COMPANIES/lil-dev/website/sitemap.xml'
+      - 'COMPANIES/lil-dev/website/guard-lildev-waitlist.mjs'
+      - '.github/workflows/lildev-waitlist-guard.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    name: Fail closed if / is not the waitlist
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Require waitlist at /; content tree must stay crawlable
+        run: node COMPANIES/lil-dev/website/guard-lildev-waitlist.mjs

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#7B3FF2">
+<title>Lil Dev Racer — Garage & Car Market | Lil Dev World</title>
+<meta name="description" content="Pick your ride and unlock new cars in the Lil Dev Racer garage. Earn coins by racing, then grab a Heritage 9, Rosso GT, Range Monarch and more.">
+<link rel="canonical" href="https://lildev.world/games/racer">
+<base href="/games/racer/">
+<meta property="og:title" content="Lil Dev Racer — Garage">
+<meta property="og:image" content="https://lildev.world/assets/images/og-cover.jpg">
+<link rel="icon" href="/assets/images/lildev-logo-cropped.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<script type="importmap">
+{ "imports": {
+	"three": "https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js",
+	"three/addons/": "https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/"
+} }
+</script>
+<style>
+	:root { --blue:#3B64B6;--yellow:#FFC400;--purple:#7B3FF2;--dark:#1A2340;--green:#34C759;--white:#fff; }
+	* { box-sizing:border-box; margin:0; padding:0; }
+	body { font-family:'Nunito',sans-serif; color:var(--dark); background:#F4F0FF; min-height:100vh; }
+	a { color:inherit; text-decoration:none; }
+
+	.top { position:sticky; top:0; z-index:20; display:flex; align-items:center; justify-content:space-between;
+		padding:14px 20px; background:rgba(42,74,138,.97); backdrop-filter:blur(12px); box-shadow:0 2px 20px rgba(0,0,0,.15); }
+	.top a.home { display:flex; align-items:center; gap:10px; color:#fff; font-family:'Fredoka',sans-serif; font-weight:700; font-size:1.1rem; }
+	.coins { display:flex; align-items:center; gap:8px; background:rgba(255,196,0,.16); border:1.5px solid rgba(255,196,0,.4);
+		color:var(--yellow); font-family:'Fredoka',sans-serif; font-weight:700; padding:6px 14px; border-radius:999px; font-size:1rem; }
+	.coins b { font-size:1.15rem; }
+
+	.hero { text-align:center; padding:2.4rem 1.5rem 1rem; background:linear-gradient(160deg,#1A0D40,#3A1A80); color:#fff; }
+	.hero h1 { font-family:'Fredoka',sans-serif; font-weight:700; font-size:clamp(2rem,6vw,3rem); line-height:1.05; }
+	.hero h1 .a { color:var(--yellow); }
+	.hero p { font-weight:700; color:rgba(255,255,255,.8); margin-top:.4rem; }
+
+	.tabs { display:flex; gap:.5rem; justify-content:center; padding:1.2rem 1rem .4rem; position:sticky; top:64px; z-index:15; background:#F4F0FF; }
+	.tab { font-family:'Fredoka',sans-serif; font-weight:700; font-size:1rem; padding:.6rem 1.6rem; border-radius:999px;
+		border:2.5px solid transparent; background:#fff; color:var(--dark); cursor:pointer; box-shadow:0 4px 14px rgba(123,63,242,.08); }
+	.tab.active { background:var(--purple); color:#fff; }
+
+	.wrap { max-width:1080px; margin:0 auto; padding:1.5rem 1.2rem 5rem; }
+	.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:1.3rem; }
+
+	.car { border-radius:1.6rem; overflow:hidden; background:#fff; border:2.5px solid #E8DDFF; transition:transform .2s,box-shadow .2s,border-color .2s; }
+	.car:hover { transform:translateY(-4px); box-shadow:0 16px 40px rgba(123,63,242,.14); }
+	.car.selected { border-color:var(--green); box-shadow:0 0 0 3px rgba(52,199,89,.25),0 16px 40px rgba(52,199,89,.15); }
+	.car-art { height:140px; display:flex; align-items:center; justify-content:center; font-size:4.6rem; position:relative;
+		filter:drop-shadow(0 8px 12px rgba(0,0,0,.25)); }
+	.car-tag { position:absolute; top:.7rem; right:.7rem; font-family:'Nunito',sans-serif; font-weight:900; font-size:.62rem;
+		letter-spacing:.06em; text-transform:uppercase; padding:.2rem .6rem; border-radius:999px; color:#fff; }
+	.car-body { padding:1rem 1.2rem 1.2rem; }
+	.car-name { font-family:'Fredoka',sans-serif; font-weight:700; font-size:1.2rem; }
+	.car-class { font-family:'Nunito',sans-serif; font-weight:800; font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--purple); margin-bottom:.5rem; }
+	.car-blurb { font-size:.82rem; color:#667; line-height:1.5; min-height:2.4em; }
+	.stats { display:flex; gap:.5rem; margin:.7rem 0; }
+	.stat { flex:1; }
+	.stat span { font-size:.62rem; font-weight:900; text-transform:uppercase; letter-spacing:.05em; color:#99a; }
+	.bar { height:7px; border-radius:99px; background:#EEE; overflow:hidden; margin-top:3px; }
+	.bar i { display:block; height:100%; background:linear-gradient(90deg,var(--blue),var(--purple)); }
+	.act { width:100%; font-family:'Fredoka',sans-serif; font-weight:700; font-size:1rem; padding:.7rem; border-radius:999px; border:none; cursor:pointer; margin-top:.3rem; }
+	.act.select { background:#EEE7FF; color:var(--purple); }
+	.act.selected-btn { background:var(--green); color:#fff; }
+	.act.buy { background:var(--yellow); color:var(--dark); }
+	.act.buy[disabled] { background:#EDEDED; color:#AAB; cursor:default; }
+	.act.owned { background:#F0FFF4; color:var(--green); cursor:default; }
+
+	.playbar { position:fixed; left:0; right:0; bottom:0; z-index:25; display:flex; align-items:center; justify-content:center; gap:1rem;
+		padding:1rem; background:linear-gradient(to top,#F4F0FF 60%,transparent); }
+	.play { font-family:'Fredoka',sans-serif; font-weight:700; font-size:1.3rem; color:var(--dark); background:var(--yellow);
+		border:none; border-radius:999px; padding:1rem 3.5rem; cursor:pointer; box-shadow:0 8px 0 #C79600,0 16px 30px rgba(0,0,0,.2);
+		transition:transform .12s,box-shadow .12s; }
+	.play:hover { transform:translateY(-2px); } .play:active { transform:translateY(5px); box-shadow:0 3px 0 #C79600; }
+	.hidden { display:none !important; }
+	.toast { position:fixed; left:50%; bottom:6rem; transform:translateX(-50%); background:var(--dark); color:#fff; font-weight:800;
+		padding:.8rem 1.4rem; border-radius:999px; z-index:40; opacity:0; transition:opacity .3s; pointer-events:none; }
+	.toast.show { opacity:1; }
+</style>
+</head>
+<body>
+<div class="top">
+	<a class="home" href="/games">🏎️ Lil Dev Racer</a>
+	<div class="coins">🪙 <b id="coinCount">0</b> coins</div>
+</div>
+
+<div class="hero">
+	<h1>The <span class="a">Garage</span></h1>
+	<p>Pick your ride. Race to earn coins. Unlock the whole grid.</p>
+	<div id="viewerWrap" style="max-width:430px;margin:1.1rem auto 0;">
+		<div id="viewer"></div>
+		<div id="viewerName" style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.05rem;color:var(--yellow);margin-top:.2rem;"></div>
+	</div>
+</div>
+
+<div style="max-width:1080px;margin:0 auto;padding:1rem 1.2rem 0;">
+	<div style="font-family:'Nunito',sans-serif;font-weight:900;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:#99a;margin-bottom:.5rem;">Pick a Track — 3 Laps</div>
+	<div id="trackStrip" style="display:flex;gap:.6rem;overflow-x:auto;padding-bottom:.6rem;-webkit-overflow-scrolling:touch;"></div>
+</div>
+<style>
+	.trk { flex:0 0 auto; cursor:pointer; border-radius:1rem; padding:.6rem 1rem; background:#fff; border:2.5px solid #E8DDFF;
+		font-family:'Fredoka',sans-serif; font-weight:600; font-size:.85rem; color:var(--dark); white-space:nowrap; }
+	.trk small { display:block; font-family:'Nunito',sans-serif; font-weight:800; font-size:.6rem; letter-spacing:.08em;
+		text-transform:uppercase; color:var(--purple); }
+	.trk.active { background:var(--purple); color:#fff; border-color:var(--purple); }
+	.trk.active small { color:rgba(255,255,255,.75); }
+</style>
+
+<div class="tabs">
+	<button class="tab active" data-tab="garage" id="tabGarage">🚗 My Garage</button>
+	<button class="tab" data-tab="market" id="tabMarket">🛒 Car Market</button>
+</div>
+
+<div class="wrap">
+	<div id="garageGrid" class="grid"></div>
+	<div id="marketGrid" class="grid hidden"></div>
+</div>
+
+<div class="playbar" id="playbar">
+	<button class="play" id="playBtn">▶ Race with <span id="playCarName">…</span></button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { CARS, getOwned, owns, grant, getSelected, setSelected, getCoins, setCoins } from '/games/racer/js/cars.js';
+import { makeThumbs, CarViewer } from '/games/racer/js/preview.js';
+import { TRACKS, getSelectedTrack, setSelectedTrack } from '/games/racer/js/tracks.js';
+
+const THUMBS = new Map();
+let viewer = null;
+
+const CLASS_EMOJI = { 'Starter':'🚗','Sports Classic':'🏎️','Hypercar':'🏎️','Luxury SUV':'🚙','Coupe SUV':'🚙','Limited Livery':'✨' };
+const TIER_COLOR = { starter:'#8a94a6', standard:'#3B64B6', premium:'#7B3FF2', limited:'#FFC400' };
+const hex = c => '#' + (c == null ? 'ffd84d' : c.toString(16).padStart(6,'0'));
+
+const $ = s => document.querySelector(s);
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
+function refreshCoins(){ $('#coinCount').textContent = getCoins(); }
+
+function statBar(label, val, max){ // val 1.0-1.35 -> %
+	const pct = Math.round(((val-0.95)/(1.35-0.95))*100);
+	return `<div class="stat"><span>${label}</span><div class="bar"><i style="width:${Math.max(12,pct)}%"></i></div></div>`;
+}
+
+function carArt(car){
+	// Real rendered 3D model when the thumbnail is ready; emoji until then.
+	const th = THUMBS.get(car.id);
+	const inner = th
+		? `<img src="${th}" alt="${car.name}" style="max-width:94%;max-height:94%;object-fit:contain;">`
+		: `<span style="color:${hex(car.color)};text-shadow:0 2px 0 rgba(0,0,0,.15)">${CLASS_EMOJI[car.klass]||'🏎️'}</span>`;
+	return `<div class="car-art" style="background:linear-gradient(135deg,${hex(car.color)}22,${hex(car.color)}55);">
+		${inner}
+		<span class="car-tag" style="background:${TIER_COLOR[car.tier]}">${car.tier}</span></div>`;
+}
+
+function renderGarage(){
+	const sel = getSelected();
+	$('#garageGrid').innerHTML = CARS.filter(c=>owns(c.id)).map(car=>{
+		const isSel = car.id===sel;
+		return `<div class="car ${isSel?'selected':''}">
+			${carArt(car)}
+			<div class="car-body">
+				<div class="car-name">${car.name}</div>
+				<div class="car-class">${car.klass}</div>
+				<div class="car-blurb">${car.blurb}</div>
+				<div class="stats">${statBar('Speed',car.speed)}${statBar('Grip',car.speed*0.9+0.1)}</div>
+				<button class="act ${isSel?'selected-btn':'select'}" data-select="${car.id}">${isSel?'✓ Selected':'Select'}</button>
+			</div></div>`;
+	}).join('');
+	const car = CARS.find(c=>c.id===sel)||CARS[0];
+	$('#playCarName').textContent = car.name;
+}
+
+function renderMarket(){
+	const coins = getCoins();
+	$('#marketGrid').innerHTML = CARS.map(car=>{
+		const owned = owns(car.id);
+		let btn;
+		if (owned) btn = `<button class="act owned" disabled>✓ Owned</button>`;
+		else if (car.priceCoins===0) btn = `<button class="act buy" data-buy="${car.id}">Get Free</button>`;
+		else if (coins >= car.priceCoins) btn = `<button class="act buy" data-buy="${car.id}">🪙 ${car.priceCoins} — Buy</button>`;
+		else btn = `<button class="act buy" disabled>🪙 ${car.priceCoins} — race to earn</button>`;
+		return `<div class="car">
+			${carArt(car)}
+			<div class="car-body">
+				<div class="car-name">${car.name}</div>
+				<div class="car-class">${car.klass}</div>
+				<div class="car-blurb">${car.blurb}</div>
+				<div class="stats">${statBar('Speed',car.speed)}${statBar('Grip',car.speed*0.9+0.1)}</div>
+				${btn}
+			</div></div>`;
+	}).join('');
+}
+
+// Interactions
+document.addEventListener('click', e => {
+	const sel = e.target.closest('[data-select]');
+	if (sel){ setSelected(sel.dataset.select); renderGarage(); toast('Car selected!'); return; }
+	const buy = e.target.closest('[data-buy]');
+	if (buy){
+		const car = CARS.find(c=>c.id===buy.dataset.buy);
+		if (getCoins() >= car.priceCoins){ setCoins(getCoins()-car.priceCoins); grant(car.id); refreshCoins(); renderMarket();
+			toast(`🎉 You unlocked the ${car.name}!`); }
+		return;
+	}
+});
+
+$('#tabGarage').onclick = ()=>{ $('#tabGarage').classList.add('active'); $('#tabMarket').classList.remove('active');
+	$('#garageGrid').classList.remove('hidden'); $('#marketGrid').classList.add('hidden'); $('#playbar').classList.remove('hidden'); renderGarage(); };
+$('#tabMarket').onclick = ()=>{ $('#tabMarket').classList.add('active'); $('#tabGarage').classList.remove('active');
+	$('#marketGrid').classList.remove('hidden'); $('#garageGrid').classList.add('hidden'); $('#playbar').classList.add('hidden'); renderMarket(); };
+
+$('#playBtn').onclick = ()=>{ location.href = '/games/racer/play?car=' + encodeURIComponent(getSelected()) + '&track=' + encodeURIComponent(getSelectedTrack()); };
+
+// ---- Track selector ----
+function renderTracks(){
+	const sel = getSelectedTrack();
+	$('#trackStrip').innerHTML = TRACKS.map(t =>
+		`<div class="trk ${t.id===sel?'active':''}" data-track="${t.id}">${t.emoji} ${t.name}<small>${t.venture} · 3 laps</small></div>`
+	).join('');
+}
+document.addEventListener('click', e => {
+	const trk = e.target.closest('[data-track]');
+	if (trk){ setSelectedTrack(trk.dataset.track); renderTracks(); }
+});
+renderTracks();
+
+// ---- Live 3D viewer of the selected car + real thumbnails ----
+function updateViewer(){
+	const car = CARS.find(c=>c.id===getSelected())||CARS[0];
+	$('#viewerName').textContent = car.name + ' — ' + car.klass;
+	if (viewer) viewer.show(car);
+}
+try {
+	viewer = new CarViewer(document.getElementById('viewer'), 190);
+	updateViewer();
+	makeThumbs().then(m => { m.forEach((v,k)=>THUMBS.set(k,v)); renderGarage();
+		if (!$('#marketGrid').classList.contains('hidden')) renderMarket(); });
+} catch(e){ /* WebGL unavailable — emoji fallback stays */ }
+
+// keep viewer in sync with selection
+const _origRenderGarage = renderGarage;
+renderGarage = function(){ _origRenderGarage(); updateViewer(); };
+
+refreshCoins(); renderGarage();
+</script>
+</body>
+</html>

@@ -1,7 +1,12 @@
 {
   "version": 2,
+  "installCommand": "node ./guard-lildev-waitlist.mjs && npm install",
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    { "source": "/soon", "destination": "/", "permanent": true },
+    { "source": "/soon.html", "destination": "/", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/(.*)",

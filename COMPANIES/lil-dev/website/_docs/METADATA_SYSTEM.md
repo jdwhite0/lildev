@@ -315,19 +315,19 @@ Max 155 characters. No keyword stuffing. Natural language.
 | Page | Correct Slug | Avoid |
 |---|---|---|
 | Home | `/` | — |
-| Meet Lil Dev | `/meet-lil-dev/` | `/meet`, `/character`, `/about` |
-| The World | `/the-world/` | `/world`, `/about-world` |
-| Adventures | `/adventures/` | `/stories`, `/episodes` |
-| Characters | `/characters/` | `/roster`, `/cast` |
-| Angel | `/angel/` | `/angel-dog`, `/companions` |
-| Learn Lab | `/learn/` | `/steam`, `/learning` |
-| Games | `/games/` | `/play-zone`, `/play` |
-| Parents | `/parents/` | `/for-parents`, `/education` |
-| Origin Story | `/origin-story/` | `/about-us`, `/our-story` |
-| Updates | `/updates/` | `/news`, `/blog` |
-| Newsletter | `/newsletter/` | `/signup`, `/subscribe` |
+| Meet Lil Dev | `/meet-lil-dev` | `/meet`, `/character`, `/about` |
+| The World | `/the-world` | `/world`, `/about-world` |
+| Adventures | `/adventures` | `/stories`, `/episodes` |
+| Characters | `/characters` | `/roster`, `/cast` |
+| Angel | `/angel` | `/angel-dog`, `/companions` |
+| Learn Lab | `/learn` | `/steam`, `/learning` |
+| Games | `/games` | `/play-zone`, `/play` |
+| Parents | `/parents` | `/for-parents`, `/education` |
+| Origin Story | `/origin-story` | `/about-us`, `/our-story` |
+| Updates | `/updates` | `/news`, `/blog` |
+| Newsletter | `/newsletter` | `/signup`, `/subscribe` |
 
-Trailing slashes: use them consistently.
+Slash policy: match the final 200 URL. `vercel.json` is `trailingSlash: false`, so only the homepage keeps a trailing slash (`/`). Every other page is slashless. Sitemap `<loc>`, `rel=canonical`, `og:url`, and internal links must use the same form — trailing-slash section URLs 308 and GSC flags "Page with redirect".
 Lowercase only. Hyphens only (no underscores).
 
 ---
@@ -336,7 +336,7 @@ Lowercase only. Hyphens only (no underscores).
 
 Every page:
 ```html
-<link rel="canonical" href="https://lildev.world/[slug]/">
+<link rel="canonical" href="https://lildev.world/[slug]">
 ```
 
 Homepage:
