@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<meta name="theme-color" content="#7B3FF2">
+	<title>Lil Dev Racer — Play | Lil Dev World</title>
+	<meta name="description" content="Buckle up! Lil Dev Racer is the first playable game in Lil Dev World. Drive, drift, and explore the track. Free to play in your browser.">
+	<link rel="canonical" href="https://lildev.world/games/racer">
+	<meta property="og:title" content="Lil Dev Racer — Play Now">
+	<meta property="og:description" content="The first playable game in Lil Dev World. Drive, drift, and explore.">
+	<meta property="og:url" content="https://lildev.world/games/racer">
+	<meta property="og:image" content="https://lildev.world/assets/images/og-cover.jpg">
+	<link rel="icon" href="/assets/images/lildev-logo-cropped.png" type="image/png">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+	<style>
+		:root { --blue:#3B64B6;--yellow:#FFC400;--purple:#7B3FF2;--dark:#1A2340;--white:#fff; }
+		* { box-sizing:border-box; margin:0; padding:0; }
+		body { overflow:hidden; background:#BFE3FF; font-family:'Nunito',sans-serif; }
+		canvas { display:block; touch-action:none; }
+
+		/* ---- Start / Loading overlay ---- */
+		#overlay {
+			position:fixed; inset:0; z-index:30; display:flex; flex-direction:column;
+			align-items:center; justify-content:center; text-align:center; padding:2rem;
+			background:radial-gradient(ellipse 70% 70% at 50% 40%,#3A1A80,#1A0D40 70%,#0D0D24);
+			transition:opacity .5s ease; overflow:hidden;
+		}
+		#overlay.hide { opacity:0; pointer-events:none; }
+		#starfield { position:absolute; inset:0; z-index:0; }
+		.ov-inner { position:relative; z-index:2; max-width:520px; }
+		.ov-tag { display:inline-block; background:var(--purple); color:#fff; font-weight:900;
+			font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; padding:.3rem 1rem;
+			border-radius:999px; margin-bottom:1.1rem; }
+		.ov-title { font-family:'Fredoka',sans-serif; font-weight:700; color:#fff; line-height:1.05;
+			font-size:clamp(2.6rem,9vw,4.6rem); text-shadow:0 6px 30px rgba(0,0,0,.4); margin-bottom:.5rem; }
+		.ov-title .accent { color:var(--yellow); }
+		.ov-sub { font-weight:800; color:rgba(255,255,255,.82); font-size:clamp(1rem,3vw,1.2rem); margin-bottom:2rem; }
+		.play-btn { font-family:'Fredoka',sans-serif; font-weight:700; font-size:1.4rem; color:var(--dark);
+			background:var(--yellow); border:none; border-radius:999px; padding:1rem 3rem; cursor:pointer;
+			box-shadow:0 10px 0 #C79600,0 18px 40px rgba(0,0,0,.35); transition:transform .12s,box-shadow .12s; }
+		.play-btn:hover { transform:translateY(-2px); }
+		.play-btn:active { transform:translateY(6px); box-shadow:0 4px 0 #C79600,0 8px 20px rgba(0,0,0,.35); }
+		.play-btn[disabled] { background:rgba(255,255,255,.18); color:rgba(255,255,255,.6); box-shadow:none; cursor:default; }
+		.controls-hint { margin-top:2rem; color:rgba(255,255,255,.6); font-weight:700; font-size:.85rem; line-height:1.8; }
+		.controls-hint kbd { display:inline-block; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.2);
+			border-radius:6px; padding:1px 8px; font-family:'Fredoka',sans-serif; font-size:.8rem; margin:0 1px; }
+
+		/* ---- In-game chrome ---- */
+		.corner {
+			position:fixed; z-index:20; font-family:'Fredoka',sans-serif; font-weight:600; font-size:.9rem;
+			color:var(--dark); text-decoration:none; background:rgba(255,255,255,.94); padding:.55rem 1.1rem;
+			border-radius:999px; box-shadow:0 4px 16px rgba(0,0,0,.18); backdrop-filter:blur(10px);
+			transition:transform .15s,background .15s; display:flex; align-items:center; gap:.4rem;
+		}
+		.corner:hover { transform:translateY(-1px); background:#fff; }
+		#back-link { top:14px; left:14px; }
+		#badge { bottom:14px; right:14px; background:var(--purple); color:#fff; pointer-events:none; }
+	</style>
+	<script type="importmap">
+	{
+		"imports": {
+			"three": "https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js",
+			"three/addons/": "https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/",
+			"crashcat": "https://esm.sh/crashcat@0.0.3"
+		}
+	}
+	</script>
+</head>
+<body>
+	<a id="back-link" class="corner" href="./">← Garage</a>
+	<div id="badge" class="corner">🏎️ Beta</div>
+
+	<div id="overlay">
+		<canvas id="starfield"></canvas>
+		<div class="ov-inner">
+			<span class="ov-tag">🎮 Playable Beta</span>
+			<h1 class="ov-title">Lil Dev <span class="accent">Racer</span></h1>
+			<p class="ov-sub">Hop in the little yellow truck. Drive, drift, explore the track!</p>
+			<button id="playBtn" class="play-btn" disabled>Loading…</button>
+			<div class="controls-hint">
+				Drive with <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> or the <kbd>arrow keys</kbd><br>
+				On phone or tablet? Just touch and steer.
+			</div>
+		</div>
+	</div>
+
+	<!-- Twinkling starfield on the start screen -->
+	<script>
+		const sc = document.getElementById('starfield'), sx = sc.getContext('2d');
+		function rs(){ sc.width = sc.offsetWidth; sc.height = sc.offsetHeight; }
+		rs(); addEventListener('resize', rs);
+		const stars = Array.from({length:110}, () => ({x:Math.random(),y:Math.random(),r:Math.random()*1.6+.3,a:Math.random(),da:.003+Math.random()*.008}));
+		(function draw(){
+			sx.clearRect(0,0,sc.width,sc.height);
+			for(const s of stars){ s.a+=s.da; if(s.a>1||s.a<0) s.da*=-1;
+				sx.globalAlpha=s.a*.85; sx.fillStyle='#fff'; sx.beginPath();
+				sx.arc(s.x*sc.width,s.y*sc.height,s.r,0,7); sx.fill(); }
+			sx.globalAlpha=1; requestAnimationFrame(draw);
+		})();
+	</script>
+
+	<!-- The game engine (ported from mrdoob's Starter-Kit-Racing, Kenney CC0 assets). -->
+	<!-- main.js signals window dispatchEvent('lildev-racer-ready') once models are loaded. -->
+	<script type="module" src="js/main.js"></script>
+
+	<script>
+		const overlay = document.getElementById('overlay');
+		const playBtn = document.getElementById('playBtn');
+		function ready(){ playBtn.disabled = false; playBtn.textContent = '▶  Play'; }
+		// Fallback: enable after 4s even if the ready event is missed.
+		window.addEventListener('lildev-racer-ready', ready);
+		setTimeout(ready, 4000);
+		playBtn.addEventListener('click', () => {
+			// Race reward — earn coins to spend in the Garage marketplace.
+			try { const k = 'jdRacerCoins'; localStorage.setItem(k, String((parseInt(localStorage.getItem(k)) || 300) + 80)); } catch (e) {}
+			overlay.classList.add('hide');
+			setTimeout(() => overlay.remove(), 550);
+		});
+	</script>
+</body>
+</html>

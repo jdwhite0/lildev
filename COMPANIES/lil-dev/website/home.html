@@ -1,20 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script>
-    if (localStorage.getItem("lildev_access_key") !== "angel") {
-      window.location.replace("/soon");
-    }
-  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#3B64B6">
   <title>Lil Dev World — Adventure. Discovery. Learning.</title>
   <meta name="description" content="Enter Lil Dev's World! Join Lil Dev and his dog Angel on adventures full of curiosity, creativity, and learning. Educational entertainment for kids ages 3–12.">
-  <link rel="canonical" href="https://lildev.world/">
+  <link rel="canonical" href="https://lildev.world/home">
   <meta property="og:title" content="Lil Dev World — Adventure. Discovery. Learning.">
   <meta property="og:description" content="Enter Lil Dev's World — where every adventure is a lesson and every discovery is a story.">
-  <meta property="og:url" content="https://lildev.world/">
+  <meta property="og:url" content="https://lildev.world/home">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Lil Dev World">
@@ -882,17 +877,13 @@
     "@id": "https://lildev.world/#organization",
     "name": "Lil Dev World",
     "alternateName": ["LilDev", "Lil Dev", "LilDev World"],
-    "url": "https://lildev.world",
+    "url": "https://lildev.world/",
     "logo": {
       "@type": "ImageObject",
       "url": "https://lildev.world/assets/images/lildev-logo-cropped.png"
     },
     "description": "Lil Dev World is a children's character universe featuring Lil Dev and his companion Angel — built for stories, learning, games, and imagination.",
-    "foundingOrganization": {
-      "@type": "Organization",
-      "name": "JD Productions",
-      "url": "https://jdproductions.io"
-    },
+    "foundingOrganization": { "@id": "https://jdproductions.io/#jd-productions" },
     "audience": {
       "@type": "Audience",
       "audienceType": "Children",
@@ -906,7 +897,7 @@
     "@context": "https://schema.org",
     "@type": "WebSite",
     "@id": "https://lildev.world/#website",
-    "url": "https://lildev.world",
+    "url": "https://lildev.world/",
     "name": "Lil Dev World",
     "description": "Adventure. Discovery. Learning. The official home of Lil Dev — a growing creative universe for curious kids.",
     "publisher": { "@id": "https://lildev.world/#organization" }
@@ -936,14 +927,14 @@
   </a>
   <div class="nav-arrow" id="navArrow" aria-hidden="true">▼ MENU</div>
   <ul class="nav-links" id="navLinks" role="list">
-    <li><a href="/the-world/">The World</a></li>
-    <li><a href="/meet-lil-dev/">Meet Lil Dev</a></li>
-    <li><a href="/adventures/">Adventures</a></li>
-    <li><a href="/characters/">Characters</a></li>
-    <li><a href="/learn/">Learn Lab</a></li>
-    <li><a href="/games/">Games</a></li>
-    <li><a href="/parents/">Parents</a></li>
-    <li><a href="/newsletter/" class="nav-cta">Join the World!</a></li>
+    <li><a href="/the-world">The World</a></li>
+    <li><a href="/meet-lil-dev">Meet Lil Dev</a></li>
+    <li><a href="/adventures">Adventures</a></li>
+    <li><a href="/characters">Characters</a></li>
+    <li><a href="/learn">Learn Lab</a></li>
+    <li><a href="/games">Games</a></li>
+    <li><a href="/parents">Parents</a></li>
+    <li><a href="/newsletter" class="nav-cta">Join the World!</a></li>
   </ul>
 </nav>
 
@@ -1469,27 +1460,27 @@
     <div class="footer-col">
       <div class="footer-col-title">The World</div>
       <ul>
-        <li><a href="/the-world/">The World</a></li>
-        <li><a href="/meet-lil-dev/">Meet Lil Dev</a></li>
-        <li><a href="/characters/">Characters</a></li>
-        <li><a href="/angel/">Angel</a></li>
-        <li><a href="/origin-story/">Origin Story</a></li>
+        <li><a href="/the-world">The World</a></li>
+        <li><a href="/meet-lil-dev">Meet Lil Dev</a></li>
+        <li><a href="/characters">Characters</a></li>
+        <li><a href="/angel">Angel</a></li>
+        <li><a href="/origin-story">Origin Story</a></li>
       </ul>
     </div>
     <div class="footer-col">
       <div class="footer-col-title">Explore</div>
       <ul>
-        <li><a href="/adventures/">Adventures</a></li>
-        <li><a href="/learn/">Learn Lab</a></li>
-        <li><a href="/games/">Games</a></li>
-        <li><a href="/updates/">Updates</a></li>
+        <li><a href="/adventures">Adventures</a></li>
+        <li><a href="/learn">Learn Lab</a></li>
+        <li><a href="/games">Games</a></li>
+        <li><a href="/updates">Updates</a></li>
       </ul>
     </div>
     <div class="footer-col">
       <div class="footer-col-title">Connect</div>
       <ul>
-        <li><a href="/parents/">For Parents</a></li>
-        <li><a href="/newsletter/">Newsletter</a></li>
+        <li><a href="/parents">For Parents</a></li>
+        <li><a href="/newsletter">Newsletter</a></li>
         <li><a href="https://lildev.store" target="_blank" rel="noopener">LilDev Store</a></li>
         <li><a href="https://jdproductions.io" target="_blank" rel="noopener">JD Productions</a></li>
       </ul>
@@ -1595,13 +1586,26 @@
   });
 
   // ── JOIN FORM ───────────────────────────────────
-  function joinSubmit(e) {
+  async function joinSubmit(e) {
     e.preventDefault();
     const btn = e.target.querySelector('.join-btn');
-    btn.textContent = "🎉 You're in the world!";
-    btn.style.background = '#34C759';
+    const input = e.target.querySelector('.join-input');
+    btn.textContent = 'Joining…';
     btn.disabled = true;
-    e.target.querySelector('.join-input').value = '';
+    try {
+      const response = await fetch('https://getaccess.world/api/public/email-streams/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ stream: 'lildev', email: input.value.trim(), source: 'lildev_home_page', referrer: document.referrer || null })
+      });
+      if (!response.ok) throw new Error('Signup failed');
+      btn.textContent = "🎉 You're in the world!";
+      btn.style.background = '#34C759';
+      input.value = '';
+    } catch {
+      btn.textContent = 'Try again';
+      btn.style.background = '#D64545';
+    }
     setTimeout(() => {
       btn.textContent = "Let's Go! 🚀";
       btn.style.background = '';
